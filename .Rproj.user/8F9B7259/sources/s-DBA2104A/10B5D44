@@ -5,15 +5,15 @@
     "dirty" : false,
     "encoding" : "UTF-8",
     "folds" : "",
-    "hash" : "3903298170",
+    "hash" : "0",
     "id" : "10B5D44",
-    "lastKnownWriteTime" : 1567228699,
-    "last_content_update" : 1567228700013,
+    "lastKnownWriteTime" : 1567230503,
+    "last_content_update" : 1567230503485,
     "path" : "~/GitHub/blog_website/content/post/2019-08-31-first-post-basic-webscraping.Rmd",
     "project_path" : "content/post/2019-08-31-first-post-basic-webscraping.Rmd",
     "properties" : {
-        "cursorPosition" : "73,110",
-        "scrollLine" : "38"
+        "cursorPosition" : "21,64",
+        "scrollLine" : "13"
     },
     "relative_order" : 3,
     "source_on_save" : false,

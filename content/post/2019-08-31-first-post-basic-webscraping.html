@@ -17,18 +17,18 @@ slug: first-post-basic-webscraping
 <p><strong>My Workflow</strong></p>
 <ul>
 <li>I would say the package widely used in R for webscraping is <a href="https://blog.rstudio.com/2014/11/24/rvest-easy-web-scraping-with-r/">Rvest</a>.</li>
-<li>As the link to the Rvest blog points out, using <a href="https://selectorgadget.com/">selectorgadget</a> (a Chrome extension) makes finding the content you want to extract that much easier. It is possible without it but you would have to spend countless minutes trying to locate the css selector you are after.</li>
+<li>As the link to the Rvest blog points out, using <a href="https://selectorgadget.com/">selectorgadget</a> (a Chrome extension) makes finding the content you want to extract that much easier. It is possible without it but you would have to spend countless minutes trying to locate the CSS selector you are after.</li>
 </ul>
 <div class="figure">
 <img src="/post/2019-08-31-first-post-basic-webscraping_files/webscrap1.png" alt="Click on the content you are after and the CSS selector will appear in the selectorgadget toolbar (bottom left)." />
 <p class="caption"><em>Click on the content you are after and the CSS selector will appear in the selectorgadget toolbar (bottom left).</em></p>
 </div>
 <ul>
-<li>Read in the website into R.</li>
+<li>First step - read in the website into R.</li>
 </ul>
 <pre class="r"><code>efinancial_news &lt;- read_html(&quot;https://news.efinancialcareers.com/hk-en/en/news-analysis&quot;)</code></pre>
 <ul>
-<li>Extract all the nodes that are linked to the CSS selector. Note that html_node will pick up the first instance where the CSS selector occurs whereas html_nodes will pick up all instances. html_text() will then extract the text within each of the html nodes. The result is an array/vector of length n (depends on how many instances there are).</li>
+<li>Extract all the items that are linked to the CSS selector, for the articles this would be “.mt-0 a” as per the selectorgadget above. Note that html_node will pick up the first item where the CSS selector occurs whereas html_nodes will pick up all instances. We are after all the articles, so we use the latter. html_text() will then extract the text within each of the items (html nodes). The result is an array/vector of length n (depends on how many articles there are).</li>
 </ul>
 <pre class="r"><code>top_news &lt;- efinancial_news %&gt;%
   html_nodes(&quot;.mt-0 a&quot;) %&gt;%
@@ -55,7 +55,7 @@ slug: first-post-basic-webscraping
 collated_flattened &lt;- paste(collated$mashed,collapse=&quot;\n\n&quot;)</code></pre>
 <ul>
 <li>We can now send an email out via R. For details on how to set up your Gmail account to sync with r, please refer to the following <a href="https://www.infoworld.com/article/3398701/how-to-send-email-from-r-and-gmail.html">link</a>.</li>
-<li>To see the entire R code used, please refer <a href="https://github.com/slee1088/webscraping_email/blob/master/code.r">here</a>. If you want to send via Outlook, this is also in the code.</li>
+<li>To see the entire R code used, please refer <a href="https://github.com/slee1088/webscraping_email/blob/master/code.r">here</a>. If you want to send via Outlook, this is also available in the code.</li>
 </ul>
 <div class="figure">
 <img src="/post/2019-08-31-first-post-basic-webscraping_files/webscrap2.png" alt="Screenshot of email received in Gmail." />

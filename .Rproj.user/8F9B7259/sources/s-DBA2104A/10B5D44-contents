@@ -24,16 +24,16 @@ So, inspired as I usually am, I got home that night, turned my PC on and decided
 **My Workflow**
 
 * I would say the package widely used in R for webscraping is [Rvest](https://blog.rstudio.com/2014/11/24/rvest-easy-web-scraping-with-r/).
-* As the link to the Rvest blog points out, using [selectorgadget](https://selectorgadget.com/) (a Chrome extension) makes finding the content you want to extract that much easier. It is possible without it but you would have to spend countless minutes trying to locate the css selector you are after.
+* As the link to the Rvest blog points out, using [selectorgadget](https://selectorgadget.com/) (a Chrome extension) makes finding the content you want to extract that much easier. It is possible without it but you would have to spend countless minutes trying to locate the CSS selector you are after.
 
 ![*Click on the content you are after and the CSS selector will appear in the selectorgadget toolbar (bottom left).*](/post/2019-08-31-first-post-basic-webscraping_files/webscrap1.png)
 
-* Read in the website into R.
+* First step - read in the website into R.
 ```{r,eval = FALSE}
 efinancial_news <- read_html("https://news.efinancialcareers.com/hk-en/en/news-analysis")
 ```
 
-* Extract all the nodes that are linked to the CSS selector. Note that html_node will pick up the first instance where the CSS selector occurs whereas html_nodes will pick up all instances. html_text() will then extract the text within each of the html nodes. The result is an array/vector of length n (depends on how many instances there are).
+* Extract all the items that are linked to the CSS selector, for the articles this would be ".mt-0 a" as per the selectorgadget above. Note that html_node will pick up the first item where the CSS selector occurs whereas html_nodes will pick up all instances. We are after all the articles, so we use the latter. html_text() will then extract the text within each of the items (html nodes). The result is an array/vector of length n (depends on how many articles there are).
 
 ```{r,eval = FALSE}
 top_news <- efinancial_news %>%
@@ -69,6 +69,6 @@ collated_flattened <- paste(collated$mashed,collapse="\n\n")
 ```
 
 * We can now send an email out via R. For details on how to set up your Gmail account to sync with r, please refer to the following [link](https://www.infoworld.com/article/3398701/how-to-send-email-from-r-and-gmail.html).
-* To see the entire R code used, please refer [here](https://github.com/slee1088/webscraping_email/blob/master/code.r). If you want to send via Outlook, this is also in the code.
+* To see the entire R code used, please refer [here](https://github.com/slee1088/webscraping_email/blob/master/code.r). If you want to send via Outlook, this is also available in the code.
 
 ![*Screenshot of email received in Gmail.*](/post/2019-08-31-first-post-basic-webscraping_files/webscrap2.png)
