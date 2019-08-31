@@ -68,7 +68,7 @@ collated <- as.data.frame(cbind(top_news,top_news_links,top_news_blurb)) %>%
 collated_flattened <- paste(collated$mashed,collapse="\n\n")
 ```
 
-* We can now send an email out via R. For details on how to set up your Gmail account to sync with r, please refer to the following [link](https://www.infoworld.com/article/3398701/how-to-send-email-from-r-and-gmail.html).
+* We can now send an email out via R. For details on how to set up your Gmail account to sync with R, please refer to the following [link](https://www.infoworld.com/article/3398701/how-to-send-email-from-r-and-gmail.html).
 * To see the entire R code used, please refer [here](https://github.com/slee1088/webscraping_email/blob/master/code.r). If you want to send via Outlook, this is also available in the code.
 
 ![*Screenshot of email received in Gmail.*](/post/2019-08-31-first-post-basic-webscraping_files/webscrap2.png)
