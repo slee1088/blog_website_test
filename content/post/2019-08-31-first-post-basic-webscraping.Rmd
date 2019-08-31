@@ -7,7 +7,7 @@ categories:
   - Rvest
 slug: first-post-basic-webscraping
 ---
-```{r setup, include=FALSE}
+```{r setup, include=FALSE,eval = FALSE}
 knitr::opts_chunk$set(collapse = TRUE)
 library(rvest)
 library(dplyr)
@@ -29,13 +29,13 @@ So, inspired as I usually am, I got home that night, turned my PC on and decided
 ![*Click on the content you are after and the CSS selector will appear in the selectorgadget toolbar (bottom left).*](/post/2019-08-31-first-post-basic-webscraping_files/webscrap1.png)
 
 * Read in the website into R.
-```{r}
+```{r,eval = FALSE}
 efinancial_news <- read_html("https://news.efinancialcareers.com/hk-en/en/news-analysis")
 ```
 
 * Extract all the nodes that are linked to the CSS selector. Note that html_node will pick up the first instance where the CSS selector occurs whereas html_nodes will pick up all instances. html_text() will then extract the text within each of the html nodes. The result is an array/vector of length n (depends on how many instances there are).
 
-```{r}
+```{r,eval = FALSE}
 top_news <- efinancial_news %>%
   html_nodes(".mt-0 a") %>%
   html_text()
@@ -44,7 +44,7 @@ top_news <- efinancial_news %>%
 
 * If you also want to pick up the link address to the article, then use the html_attr function with "href" as the argument. 
 
-```{r}
+```{r,eval = FALSE}
 top_news_links <- efinancial_news %>%
   html_nodes(".mt-0 a") %>%
   html_attr("href")
@@ -52,7 +52,7 @@ top_news_links <- efinancial_news %>%
 
 * The blurb for the article which is linked to a different CSS selector can also be extracted using the same steps above.
 
-```{r}
+```{r,eval = FALSE}
 top_news_blurb <- efinancial_news %>%
   html_nodes(".article-byline+ p") %>%
   html_text()
@@ -61,9 +61,15 @@ top_news_blurb <- efinancial_news %>%
 * Now, we have three arrays/vectors of the same size, one for the article header, the link to the article and the last one containing the blurb for the article.
 * These can be combined into a single data frame and flattened out into a form that can fit into an email. 
 
-```{r}
+```{r,eval = FALSE}
 collated <- as.data.frame(cbind(top_news,top_news_links,top_news_blurb)) %>% 
   mutate(mashed=paste0(top_news," - ",top_news_links," (Blurb: ",top_news_blurb,")"))
 
 collated_flattened <- paste(collated$mashed,collapse="\n\n")
 ```
+
+* We can now send an email out via R. For details on how to set up your Gmail account to sync with r, please refer to the following [link](https://www.infoworld.com/article/3398701/how-to-send-email-from-r-and-gmail.html).
+* To see the entire R code used, please refer [here](https://github.com/slee1088/webscraping_email/blob/master/code.r). If you want to send via Outlook, this is also in the code.
+
+![*Screenshot of email received in Gmail.*](/post/2019-08-31-first-post-basic-webscraping_files/webscrap2.png)
+

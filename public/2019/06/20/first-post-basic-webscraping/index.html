@@ -60,7 +60,7 @@
 
   <article class="article">
     
-    <span class="article-duration">2 min read</span>
+    <span class="article-duration">3 min read</span>
     
 
     <h1 class="article-title">Scraping a website and sending the contents via email</h1>
@@ -116,6 +116,14 @@
   mutate(mashed=paste0(top_news,&quot; - &quot;,top_news_links,&quot; (Blurb: &quot;,top_news_blurb,&quot;)&quot;))
 
 collated_flattened &lt;- paste(collated$mashed,collapse=&quot;\n\n&quot;)</code></pre>
+<ul>
+<li>We can now send an email out via R. For details on how to set up your Gmail account to sync with r, please refer to the following <a href="https://www.infoworld.com/article/3398701/how-to-send-email-from-r-and-gmail.html">link</a>.</li>
+<li>To see the entire R code used, please refer <a href="https://github.com/slee1088/webscraping_email/blob/master/code.r">here</a>. If you want to send via Outlook, this is also in the code.</li>
+</ul>
+<div class="figure">
+<img src="/post/2019-08-31-first-post-basic-webscraping_files/webscrap2.png" alt="Screenshot of email received in Gmail." />
+<p class="caption"><em>Screenshot of email received in Gmail.</em></p>
+</div>
 
     </div>
   </article>
