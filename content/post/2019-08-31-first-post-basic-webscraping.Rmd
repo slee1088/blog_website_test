@@ -72,4 +72,3 @@ collated_flattened <- paste(collated$mashed,collapse="\n\n")
 * To see the entire R code used, please refer [here](https://github.com/slee1088/webscraping_email/blob/master/code.r). If you want to send via Outlook, this is also in the code.
 
 ![*Screenshot of email received in Gmail.*](/post/2019-08-31-first-post-basic-webscraping_files/webscrap2.png)
-
