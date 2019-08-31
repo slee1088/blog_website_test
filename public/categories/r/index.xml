@@ -18,8 +18,7 @@
       
       <guid>/2019/06/20/first-post-basic-webscraping/</guid>
       <description>Some Context
-A friend [haha] dsf
-This text is bold</description>
+One day after work, I was messaging with a friend (who’s extremely curious about data and it’s applications and a source of great ideas) and we were talking about scraping data from the internet and what tools were currently available and most easy to learn. R and Python sprang to mind and so we deep dived into some of the packages available in those languages. Then, funnily enough, the conversation turned to VBA and crude methods such as using sendkeys and how unreliable they were.</description>
     </item>
     
     <item>

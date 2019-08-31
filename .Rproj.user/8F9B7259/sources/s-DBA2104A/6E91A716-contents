@@ -10,6 +10,7 @@ library(rvest)
 library(lubridate)
 library(dplyr)
 library(gmailr)
+
 library(RDCOMClient)
 
 if(hour(Sys.time()) < 12){
