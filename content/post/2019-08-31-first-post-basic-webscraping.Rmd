@@ -1,5 +1,5 @@
 ---
-title: Scraping a News Website
+title: Scraping a website and sending the contents via email
 author: Scott Lee
 date: '2019-06-20'
 categories:
@@ -9,6 +9,8 @@ slug: first-post-basic-webscraping
 ---
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(collapse = TRUE)
+library(rvest)
+library(dplyr)
 ```
 
 **Some Context**
@@ -21,14 +23,47 @@ So, inspired as I usually am, I got home that night, turned my PC on and decided
 
 **My Workflow**
 
-* I would say the package widely used in R for webscraping is [Rvest](https://blog.rstudio.com/2014/11/24/rvest-easy-web-scraping-with-r/). These are the packages I used in my workflow:
-    + *rvest*
-    + *lubridate*
-    + *dplyr*
-    + *gmailr*
+* I would say the package widely used in R for webscraping is [Rvest](https://blog.rstudio.com/2014/11/24/rvest-easy-web-scraping-with-r/).
 * As the link to the Rvest blog points out, using [selectorgadget](https://selectorgadget.com/) (a Chrome extension) makes finding the content you want to extract that much easier. It is possible without it but you would have to spend countless minutes trying to locate the css selector you are after.
 
-![*Click on the content you are after and the css selector will appear in the selectorgadget toolbar*](/post/2019-08-31-first-post-basic-webscraping_files/webscrap1.png)
+![*Click on the content you are after and the CSS selector will appear in the selectorgadget toolbar (bottom left).*](/post/2019-08-31-first-post-basic-webscraping_files/webscrap1.png)
 
-* 
+* Read in the website into R.
+```{r}
+efinancial_news <- read_html("https://news.efinancialcareers.com/hk-en/en/news-analysis")
+```
 
+* Extract all the nodes that are linked to the CSS selector. Note that html_node will pick up the first instance where the CSS selector occurs whereas html_nodes will pick up all instances. html_text() will then extract the text within each of the html nodes. The result is an array/vector of length n (depends on how many instances there are).
+
+```{r}
+top_news <- efinancial_news %>%
+  html_nodes(".mt-0 a") %>%
+  html_text()
+```
+
+
+* If you also want to pick up the link address to the article, then use the html_attr function with "href" as the argument. 
+
+```{r}
+top_news_links <- efinancial_news %>%
+  html_nodes(".mt-0 a") %>%
+  html_attr("href")
+```
+
+* The blurb for the article which is linked to a different CSS selector can also be extracted using the same steps above.
+
+```{r}
+top_news_blurb <- efinancial_news %>%
+  html_nodes(".article-byline+ p") %>%
+  html_text()
+```
+
+* Now, we have three arrays/vectors of the same size, one for the article header, the link to the article and the last one containing the blurb for the article.
+* These can be combined into a single data frame and flattened out into a form that can fit into an email. 
+
+```{r}
+collated <- as.data.frame(cbind(top_news,top_news_links,top_news_blurb)) %>% 
+  mutate(mashed=paste0(top_news," - ",top_news_links," (Blurb: ",top_news_blurb,")"))
+
+collated_flattened <- paste(collated$mashed,collapse="\n\n")
+```

@@ -1,5 +1,5 @@
 ---
-title: Scraping a News Website
+title: Scraping a website and sending the contents via email
 author: Scott Lee
 date: '2019-06-20'
 categories:
@@ -16,19 +16,40 @@ slug: first-post-basic-webscraping
 <p><em>Please always be mindful of the legality of webscraping when you webscrape, useful link <a href="https://www.datahen.com/data-crawling-get-legal-side/?utm_source=Quora&amp;utm_medium=Answers">here</a>.</em></p>
 <p><strong>My Workflow</strong></p>
 <ul>
-<li>I would say the package widely used in R for webscraping is <a href="https://blog.rstudio.com/2014/11/24/rvest-easy-web-scraping-with-r/">Rvest</a>. These are the packages I used in my workflow:
-<ul>
-<li><em>rvest</em></li>
-<li><em>lubridate</em></li>
-<li><em>dplyr</em></li>
-<li><em>gmailr</em></li>
-</ul></li>
+<li>I would say the package widely used in R for webscraping is <a href="https://blog.rstudio.com/2014/11/24/rvest-easy-web-scraping-with-r/">Rvest</a>.</li>
 <li>As the link to the Rvest blog points out, using <a href="https://selectorgadget.com/">selectorgadget</a> (a Chrome extension) makes finding the content you want to extract that much easier. It is possible without it but you would have to spend countless minutes trying to locate the css selector you are after.</li>
 </ul>
 <div class="figure">
-<img src="/post/2019-08-31-first-post-basic-webscraping_files/webscrap1.png" alt="Click on the content you are after and the css selector will appear in the selectorgadget toolbar" />
-<p class="caption"><em>Click on the content you are after and the css selector will appear in the selectorgadget toolbar</em></p>
+<img src="/post/2019-08-31-first-post-basic-webscraping_files/webscrap1.png" alt="Click on the content you are after and the CSS selector will appear in the selectorgadget toolbar (bottom left)." />
+<p class="caption"><em>Click on the content you are after and the CSS selector will appear in the selectorgadget toolbar (bottom left).</em></p>
 </div>
 <ul>
-<li></li>
+<li>Read in the website into R.</li>
 </ul>
+<pre class="r"><code>efinancial_news &lt;- read_html(&quot;https://news.efinancialcareers.com/hk-en/en/news-analysis&quot;)</code></pre>
+<ul>
+<li>Extract all the nodes that are linked to the CSS selector. Note that html_node will pick up the first instance where the CSS selector occurs whereas html_nodes will pick up all instances. html_text() will then extract the text within each of the html nodes. The result is an array/vector of length n (depends on how many instances there are).</li>
+</ul>
+<pre class="r"><code>top_news &lt;- efinancial_news %&gt;%
+  html_nodes(&quot;.mt-0 a&quot;) %&gt;%
+  html_text()</code></pre>
+<ul>
+<li>If you also want to pick up the link address to the article, then use the html_attr function with “href” as the argument.</li>
+</ul>
+<pre class="r"><code>top_news_links &lt;- efinancial_news %&gt;%
+  html_nodes(&quot;.mt-0 a&quot;) %&gt;%
+  html_attr(&quot;href&quot;)</code></pre>
+<ul>
+<li>The blurb for the article which is linked to a different CSS selector can also be extracted using the same steps above.</li>
+</ul>
+<pre class="r"><code>top_news_blurb &lt;- efinancial_news %&gt;%
+  html_nodes(&quot;.article-byline+ p&quot;) %&gt;%
+  html_text()</code></pre>
+<ul>
+<li>Now, we have three arrays/vectors of the same size, one for the article header, the link to the article and the last one containing the blurb for the article.</li>
+<li>These can be combined into a single data frame and flattened out into a form that can fit into an email.</li>
+</ul>
+<pre class="r"><code>collated &lt;- as.data.frame(cbind(top_news,top_news_links,top_news_blurb)) %&gt;% 
+  mutate(mashed=paste0(top_news,&quot; - &quot;,top_news_links,&quot; (Blurb: &quot;,top_news_blurb,&quot;)&quot;))
+
+collated_flattened &lt;- paste(collated$mashed,collapse=&quot;\n\n&quot;)</code></pre>
