@@ -22,10 +22,13 @@ So, inspired as I usually am, I got home that night, turned my PC on and decided
 **My Workflow**
 
 * I would say the package widely used in R for webscraping is [Rvest](https://blog.rstudio.com/2014/11/24/rvest-easy-web-scraping-with-r/). These are the packages I used in my workflow:
-  + *rvest*
-  + *lubridate*
-  + *dplyr*
-  + *gmailr*
-* As the link to the Rvest blog points out, using [selectorgadget](https://selectorgadget.com/) (a Chrome extension) makes finding the content you want to extract that much easier. It is possible without it but you would have to spend countless minutes trying to locate the css selector you are after - not fun at all! 
+    + *rvest*
+    + *lubridate*
+    + *dplyr*
+    + *gmailr*
+* As the link to the Rvest blog points out, using [selectorgadget](https://selectorgadget.com/) (a Chrome extension) makes finding the content you want to extract that much easier. It is possible without it but you would have to spend countless minutes trying to locate the css selector you are after.
+
+![*Click on the content you are after and the css selector will appear in the selectorgadget toolbar*](/post/2019-08-31-first-post-basic-webscraping_files/webscrap1.png)
+
 * 
 

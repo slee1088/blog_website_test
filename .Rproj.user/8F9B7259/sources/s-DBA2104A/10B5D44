@@ -7,13 +7,13 @@
     "folds" : "",
     "hash" : "0",
     "id" : "10B5D44",
-    "lastKnownWriteTime" : 1567223396,
-    "last_content_update" : 1567223396015,
+    "lastKnownWriteTime" : 1567224506,
+    "last_content_update" : 1567224506900,
     "path" : "~/GitHub/blog_website/content/post/2019-08-31-first-post-basic-webscraping.Rmd",
     "project_path" : "content/post/2019-08-31-first-post-basic-webscraping.Rmd",
     "properties" : {
-        "cursorPosition" : "28,319",
-        "scrollLine" : "0"
+        "cursorPosition" : "32,2",
+        "scrollLine" : "3"
     },
     "relative_order" : 3,
     "source_on_save" : false,
