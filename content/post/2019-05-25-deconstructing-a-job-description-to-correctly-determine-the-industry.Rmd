@@ -23,7 +23,7 @@ library(gmodels)
 
 **Some Context**
 
-After reading [this great machine learning textbook by Brett Lantz](https://www.amazon.com.au/Machine-Learning-Third-Brett-Lantz/dp/1788295862/ref=asc_df_1788295862/), I was left wondering where I could use some of the techniques taught in the book for my personal use.
+After reading [this really good machine learning textbook by Brett Lantz](https://www.amazon.com.au/Machine-Learning-Third-Brett-Lantz/dp/1788295862/ref=asc_df_1788295862/), I was left wondering where I could use some of the techniques taught in the book for my personal use.
 
 Personally, when I search for jobs on websites like Seek, I tend to narrow my search to a specific role. The dangers with this is that, in recent times, data roles can go by many names. Different companies may use a different title for essentially the same role. Searching can therefore become difficult because of this. Even if you do find a role that sounds right for you, you realise after reading the job description it isn't!
 
@@ -133,7 +133,7 @@ CrossTable(descriptions_test_class, descriptions_test_labels,
 
 * The model was able to classify 92 percent of all the job descriptions as belonging to the Healthcare & Medical industry or not. Not bad!
 * Now, imagine if we had a system in place that picked up job descriptions through a job site API and we received an email on a recurrent basis with jobs in the industry we were after. We would be worried about the false negatives (17), jobs that were in the industry we are after but which we did not receive because our classifier said they weren't! Rest assured, there are methodologies to skew the results so that false negatives are penalised and therefore reduce its occurrence - refer to the *C5.0* package.
-* Yikes, this blog is getting longer than I anticipated. I'll wrap it up here. Following is just a glimpse of the industries prominent in the false positives.
+* Yikes, this blog is getting longer than I anticipated. I'll wrap it up here. Following is a glimpse of the industries prominent in the false positives. Full code available [here](https://github.com/slee1088/industry_classifier/blob/master/naive.r).
 
 ```{r,eval = TRUE, warning=FALSE}
 as.data.frame(cbind(A=data_flagged[-train_sample,]$job_description,category=data_flagged[-train_sample,]$category,descriptions_test_class,descriptions_test_pred_yes)) %>%

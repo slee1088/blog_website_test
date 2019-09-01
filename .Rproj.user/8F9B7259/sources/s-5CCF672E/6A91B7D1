@@ -5,16 +5,16 @@
     "dirty" : false,
     "encoding" : "UTF-8",
     "folds" : "",
-    "hash" : "1341685543",
+    "hash" : "0",
     "id" : "6A91B7D1",
-    "lastKnownWriteTime" : 1567305245,
-    "last_content_update" : 1567305245911,
+    "lastKnownWriteTime" : 1567307368,
+    "last_content_update" : 1567307368512,
     "path" : "~/GitHub/blog_website/content/post/2019-05-25-deconstructing-a-job-description-to-correctly-determine-the-industry.Rmd",
     "project_path" : "content/post/2019-05-25-deconstructing-a-job-description-to-correctly-determine-the-industry.Rmd",
     "properties" : {
-        "cursorPosition" : "109,157",
+        "cursorPosition" : "34,0",
         "last_setup_crc32" : "5CCF672E4e8363ec",
-        "scrollLine" : "92"
+        "scrollLine" : "5"
     },
     "relative_order" : 5,
     "source_on_save" : false,
