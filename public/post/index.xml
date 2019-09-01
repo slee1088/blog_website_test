@@ -38,8 +38,16 @@ Personally, when I search for jobs on websites like Seek, I tend to narrow my se
       <pubDate>Sat, 13 Oct 2018 00:00:00 +0000</pubDate>
       
       <guid>/2018/10/13/test-network-graphs/</guid>
-      <description>I was working on the igraph package in R at work a couple of weeks ago and although it did the job, it lacked a bit of a visual presence. Thought I’d have a look at D3 Network graphs. Looks promising thus far! Enjoying the interactivity of the nodes.
-library(networkD3)data(MisLinks)data(MisNodes)forceNetwork(Links = MisLinks, Nodes = MisNodes, Source = &amp;quot;source&amp;quot;,Target = &amp;quot;target&amp;quot;, Value = &amp;quot;value&amp;quot;, NodeID = &amp;quot;name&amp;quot;,Group = &amp;quot;group&amp;quot;, opacity = 1){&#34;</description>
+      <description>I was working on the igraph package in R at work a couple of weeks ago and although it did the job, it lacked a bit of a visual presence. Here is a website full of igraph network graphs for your reference.Thought I’d have a look at D3 Network graphs. Looks promising thus far! Enjoying the interactivity of the nodes. It’s also very surprisingly easy to implement.</description>
+    </item>
+    
+    <item>
+      <title></title>
+      <link>/1/01/01/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>/1/01/01/</guid>
+      <description>.link {stroke: #666;opacity: 0.4;stroke-width: 1.5px;}.node circle {stroke: #fff;opacity: 0.4;stroke-width: 1.5px;}.node:not(:hover) .nodetext {display: none;}text {font: 7px serif;opacity: 0.4;pointer-events: none;} var links = [ { &#34;source&#34; : 1, &#34;target&#34; : 0, &#34;value&#34; : 1 }, { &#34;source&#34; : 2, &#34;target&#34; : 0, &#34;value&#34; : 8 }, { &#34;source&#34; : 3, &#34;</description>
     </item>
     
   </channel>

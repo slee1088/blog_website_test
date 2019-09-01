@@ -17,8 +17,7 @@
       <pubDate>Sat, 13 Oct 2018 00:00:00 +0000</pubDate>
       
       <guid>/2018/10/13/test-network-graphs/</guid>
-      <description>I was working on the igraph package in R at work a couple of weeks ago and although it did the job, it lacked a bit of a visual presence. Thought I’d have a look at D3 Network graphs. Looks promising thus far! Enjoying the interactivity of the nodes.
-library(networkD3)data(MisLinks)data(MisNodes)forceNetwork(Links = MisLinks, Nodes = MisNodes, Source = &amp;quot;source&amp;quot;,Target = &amp;quot;target&amp;quot;, Value = &amp;quot;value&amp;quot;, NodeID = &amp;quot;name&amp;quot;,Group = &amp;quot;group&amp;quot;, opacity = 1){&#34;</description>
+      <description>I was working on the igraph package in R at work a couple of weeks ago and although it did the job, it lacked a bit of a visual presence. Here is a website full of igraph network graphs for your reference.Thought I’d have a look at D3 Network graphs. Looks promising thus far! Enjoying the interactivity of the nodes. It’s also very surprisingly easy to implement.</description>
     </item>
     
   </channel>
