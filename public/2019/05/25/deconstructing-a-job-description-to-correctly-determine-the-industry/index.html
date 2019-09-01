@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="generator" content="Hugo 0.57.2" />
+
+
+<title>Correctly determine the Industry - Scott&#39;s Random Data Blog</title>
+<meta property="og:title" content="Correctly determine the Industry - Scott&#39;s Random Data Blog">
+
+
+  <link href='/home.png' rel='icon' type='image/x-icon'/>
+
+
+
+  
+
+
+
+
+
+
+
+
+<link href='//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css' rel='stylesheet' type='text/css' />
+
+
+
+<link rel="stylesheet" href="/css/fonts.css" media="all">
+<link rel="stylesheet" href="/css/main.css" media="all">
+
+
+
+  </head>
+  <body>
+    <div class="wrapper">
+      <header class="header">
+        <nav class="nav">
+  <a href="/" class="nav-logo">
+    <img src="/images/home.png"
+         width="50"
+         height="50"
+         alt="Logo">
+  </a>
+
+  <ul class="nav-links">
+    
+    <li><a href="/about/">About</a></li>
+    
+    <li><a href="https://github.com/slee1088">GitHub</a></li>
+    
+  </ul>
+</nav>
+
+      </header>
+
+
+<main class="content" role="main">
+
+  <article class="article">
+    
+    <span class="article-duration">3 min read</span>
+    
+
+    <h1 class="article-title">Correctly determine the Industry</h1>
+
+    
+    <span class="article-date">2019-05-25</span>
+    
+
+    <div class="article-content">
+      
+
+
+<p><strong>Some Context</strong></p>
+<p>After reading <a href="https://www.amazon.com.au/Machine-Learning-Third-Brett-Lantz/dp/1788295862/ref=asc_df_1788295862/">this great machine learning textbook by Brett Lantz</a>, I was left wondering where I could use some of the techniques taught in the book for my personal use.</p>
+<p>Personally, when I search for jobs on websites like Seek, I tend to narrow my search to a specific role. The dangers with this is that, in recent times, data roles can go by many names. Different companies may use a different title for essentially the same role. Searching can therefore become difficult because of this. Even if you do find a role that sounds right for you, you realise after reading the job description it isn’t!</p>
+<p>Using a dataset available in Kaggle (<a href="https://www.kaggle.com/PromptCloudHQ/australian-job-listings-data-from-seek-job-board">Australian job listings data from Seek job board</a>), I decided to deconstruct the job description, word by word, to build a Naive Bayes classifier that would predict which industry the job falls under.</p>
+<p><strong>Workflow</strong></p>
+<p>The workflow follows closely to what Brett Lantz uses in his textbook - so check the textbook out!</p>
+<ul>
+<li>First step - read in csv file into R. Note the encoding - the file had some uncommon characters that was making it difficult to use string functions.</li>
+</ul>
+<pre class="r"><code>data &lt;- read_csv(&quot;seek_australia_sample.csv&quot;,locale = readr::locale(encoding = &quot;windows-1252&quot;))
+## Parsed with column specification:
+## cols(
+##   pageurl = col_character(),
+##   crawl_timestamp = col_character(),
+##   job_title = col_character(),
+##   category = col_character(),
+##   company_name = col_character(),
+##   city = col_character(),
+##   post_date = col_datetime(format = &quot;&quot;),
+##   job_description = col_character(),
+##   job_type = col_character(),
+##   job_board = col_character(),
+##   geo = col_character(),
+##   state = col_character(),
+##   salary_offered = col_character()
+## )</code></pre>
+<ul>
+<li>For the purposes of this blog, I decided to focus on the Healthcare &amp; Medical industry. I also created a classifier for Banking and Financial Industry but the results were less than clearcut with jobs in the Information &amp; Communication Technology and Insurance industry among others overlapping and also getting returned back (as expected given the similarities between the industries). Healthcare &amp; Medical appeared more insulated, although a few industries did encroach, in particular, Education and Community Services.</li>
+</ul>
+<pre class="r"><code>data_flagged &lt;- data %&gt;%
+  mutate(flag=ifelse(category %in% c(&quot;Healthcare &amp; Medical&quot;),&quot;Yes&quot;,&quot;No&quot;)) %&gt;%
+  mutate(no_chars=nchar(job_description))</code></pre>
+<ul>
+<li>The following utilises a text mining package named <em>tm</em>. More details of this package can be found in <em>Text Mining Infrastructure in R, Feinerer I, Hornik K and Meyer D, Journal of Statistical Software, 2008, Vol. 25, pp. 1-54</em>. I will not go into detail with the following code but you can consult the textbook or the Journal.</li>
+</ul>
+<pre class="r"><code>descriptions_corpus &lt;- VCorpus(VectorSource(data_flagged$job_description)) ##supply job descriptions into VCorpus
+descriptions_corpus_clean &lt;- tm_map(descriptions_corpus,content_transformer(tolower)) ##text transformation - lowercase
+descriptions_corpus_clean &lt;- tm_map(descriptions_corpus_clean, removeNumbers) ##remove numbers
+descriptions_corpus_clean &lt;- tm_map(descriptions_corpus_clean,removeWords, stopwords()) ##list of stopwords listed in the tm package
+descriptions_corpus_clean &lt;- tm_map(descriptions_corpus_clean, removePunctuation)
+descriptions_corpus_clean &lt;- tm_map(descriptions_corpus_clean, stripWhitespace)
+
+descriptions_dtm &lt;- DocumentTermMatrix(descriptions_corpus_clean) ##this will create a sparse matrix with all the words found in the above having its own column with the number of its occurrence for each job description listed in the cell</code></pre>
+<ul>
+<li>We now create the training and test dataset, here I’ve used a 80:20 split (remember to set your seed to ensure reproducibility). Play around with the seed to ensure you have a proper representation of your industry in both datasets.</li>
+</ul>
+<pre class="r"><code>set.seed(1234501) 
+train_sample &lt;- sample(4725,3780)
+
+descriptions_dtm_train &lt;- descriptions_dtm[train_sample,]
+descriptions_dtm_test &lt;- descriptions_dtm[-train_sample,]
+
+descriptions_train_labels &lt;- data_flagged[train_sample,]$flag
+descriptions_test_labels &lt;- data_flagged[-train_sample,]$flag</code></pre>
+<pre class="r"><code>prop.table(table(descriptions_train_labels))
+## descriptions_train_labels
+##         No        Yes 
+## 0.91984127 0.08015873
+prop.table(table(descriptions_test_labels))
+## descriptions_test_labels
+##         No        Yes 
+## 0.92418462 0.07581538</code></pre>
+
+    </div>
+  </article>
+
+  
+
+
+</main>
+
+      <footer class="footer">
+        <ul class="footer-links">
+          <li>
+            <a href="/index.xml" type="application/rss+xml" target="_blank">RSS feed</a>
+          </li>
+          <li>
+            <a href="https://gohugo.io/" class="footer-links-kudos">Made with <img src="/images/hugo-logo.png" alt="Img link to Hugo website" width="22" height="22"></a>
+          </li>
+        </ul>
+      </footer>
+
+    </div>
+    
+
+
+
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+
+
+
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/languages/r.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/languages/yaml.min.js"></script>
+<script>hljs.configure({languages: []}); hljs.initHighlightingOnLoad();</script>
+
+
+
+    
+<script src="/js/math-code.js"></script>
+<script async src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+
+
+    
+  </body>
+</html>
+

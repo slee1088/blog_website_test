@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Text Mining on Scott&#39;s Random Data Blog</title>
+    <link>/tags/text-mining/</link>
+    <description>Recent content in Text Mining on Scott&#39;s Random Data Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Sat, 25 May 2019 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="/tags/text-mining/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Correctly determine the Industry</title>
+      <link>/2019/05/25/deconstructing-a-job-description-to-correctly-determine-the-industry/</link>
+      <pubDate>Sat, 25 May 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/2019/05/25/deconstructing-a-job-description-to-correctly-determine-the-industry/</guid>
+      <description>Some Context
+After reading this great machine learning textbook by Brett Lantz, I was left wondering where I could use some of the techniques taught in the book for my personal use.
+Personally, when I search for jobs on websites like Seek, I tend to narrow my search to a specific role. The dangers with this is that, in recent times, data roles can go by many names. Different companies may use a different title for essentially the same role.</description>
+    </item>
+    
+  </channel>
+</rss>

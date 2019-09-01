@@ -1,0 +1,79 @@
+---
+title: Correctly determine the Industry
+author: Scott Lee
+date: '2019-05-25'
+categories:
+  - R
+tags:
+  - Naive Bayes Classifier
+  - Text Mining
+slug: deconstructing-a-job-description-to-correctly-determine-the-industry
+---
+
+```{r setup, include=FALSE,eval = TRUE}
+knitr::opts_chunk$set(collapse = TRUE)
+library(readr)
+library(dplyr)
+library(tm)
+library(SnowballC)
+library(wordcloud)
+library(e1071)
+library(gmodels)
+```
+
+**Some Context**
+
+After reading [this great machine learning textbook by Brett Lantz](https://www.amazon.com.au/Machine-Learning-Third-Brett-Lantz/dp/1788295862/ref=asc_df_1788295862/), I was left wondering where I could use some of the techniques taught in the book for my personal use.
+
+Personally, when I search for jobs on websites like Seek, I tend to narrow my search to a specific role. The dangers with this is that, in recent times, data roles can go by many names. Different companies may use a different title for essentially the same role. Searching can therefore become difficult because of this. Even if you do find a role that sounds right for you, you realise after reading the job description it isn't!
+
+Using a dataset available in Kaggle ([Australian job listings data from Seek job board](https://www.kaggle.com/PromptCloudHQ/australian-job-listings-data-from-seek-job-board)), I decided to deconstruct the job description, word by word, to build a Naive Bayes classifier that would predict which industry the job falls under. 
+
+**Workflow**
+
+The workflow follows closely to what Brett Lantz uses in his textbook - so check the textbook out!
+
+* First step - read in csv file into R. Note the encoding - the file had some uncommon characters that was making it difficult to use string functions.
+
+```{r,eval = TRUE}
+data <- read_csv("seek_australia_sample.csv",locale = readr::locale(encoding = "windows-1252"))
+```
+
+* For the purposes of this blog, I decided to focus on the Healthcare & Medical industry. I also created a classifier for Banking and Financial Industry but the results were less than clearcut with jobs in the Information & Communication Technology and Insurance industry among others overlapping and also getting returned back (as expected given the similarities between the industries). Healthcare & Medical appeared more insulated, although a few industries did encroach, in particular, Education and Community Services.
+
+```{r,eval = TRUE}
+data_flagged <- data %>%
+  mutate(flag=ifelse(category %in% c("Healthcare & Medical"),"Yes","No")) %>%
+  mutate(no_chars=nchar(job_description))
+```
+
+* The following utilises a text mining package named *tm*. More details of this package can be found in *Text Mining Infrastructure in R, Feinerer I, Hornik K and Meyer D, Journal of Statistical Software, 2008, Vol. 25, pp. 1-54*. I will not go into detail with the following code but you can consult the textbook or the Journal.
+
+```{r,eval = TRUE}
+descriptions_corpus <- VCorpus(VectorSource(data_flagged$job_description)) ##supply job descriptions into VCorpus
+descriptions_corpus_clean <- tm_map(descriptions_corpus,content_transformer(tolower)) ##text transformation - lowercase
+descriptions_corpus_clean <- tm_map(descriptions_corpus_clean, removeNumbers) ##remove numbers
+descriptions_corpus_clean <- tm_map(descriptions_corpus_clean,removeWords, stopwords()) ##list of stopwords listed in the tm package
+descriptions_corpus_clean <- tm_map(descriptions_corpus_clean, removePunctuation)
+descriptions_corpus_clean <- tm_map(descriptions_corpus_clean, stripWhitespace)
+
+descriptions_dtm <- DocumentTermMatrix(descriptions_corpus_clean) ##this will create a sparse matrix with all the words found in the above having its own column with the number of its occurrence for each job description listed in the cell
+```
+
+* We now create the training and test dataset, here I've used a 80:20 split (remember to set your seed to ensure reproducibility). Play around with the seed to ensure you have a proper representation of your industry in both datasets.
+
+```{r,eval = T}
+set.seed(1234501) 
+train_sample <- sample(4725,3780)
+
+descriptions_dtm_train <- descriptions_dtm[train_sample,]
+descriptions_dtm_test <- descriptions_dtm[-train_sample,]
+
+descriptions_train_labels <- data_flagged[train_sample,]$flag
+descriptions_test_labels <- data_flagged[-train_sample,]$flag
+```
+
+```{r,eval = TRUE}
+prop.table(table(descriptions_train_labels))
+prop.table(table(descriptions_test_labels))
+```

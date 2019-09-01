@@ -21,5 +21,16 @@
 One day after work, I was messaging with a friend (who’s extremely curious about data and it’s applications and a source of great ideas) and we were talking about scraping data from the internet and what tools were currently available and most easy to learn. R and Python sprang to mind and so we deep dived into some of the packages available in those languages. Then, funnily enough, the conversation turned to VBA and crude methods such as using sendkeys and how unreliable they were.</description>
     </item>
     
+    <item>
+      <title>Correctly determine the Industry</title>
+      <link>/2019/05/25/deconstructing-a-job-description-to-correctly-determine-the-industry/</link>
+      <pubDate>Sat, 25 May 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/2019/05/25/deconstructing-a-job-description-to-correctly-determine-the-industry/</guid>
+      <description>Some Context
+After reading this great machine learning textbook by Brett Lantz, I was left wondering where I could use some of the techniques taught in the book for my personal use.
+Personally, when I search for jobs on websites like Seek, I tend to narrow my search to a specific role. The dangers with this is that, in recent times, data roles can go by many names. Different companies may use a different title for essentially the same role.</description>
+    </item>
+    
   </channel>
 </rss>
