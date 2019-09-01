@@ -1,7 +1,7 @@
 ---
-title: Correctly determine the Industry
+title: Guess that Industry
 author: Scott Lee
-date: '2019-05-25'
+date: '2019-04-21'
 categories:
   - R
 tags:
@@ -37,6 +37,10 @@ The workflow follows closely to what Brett Lantz uses in his textbook - so check
 
 ```{r,eval = TRUE}
 data <- read_csv("seek_australia_sample.csv",locale = readr::locale(encoding = "windows-1252"))
+
+data <- data %>% 
+  select(job_description,category) %>%
+  filter(!is.na(job_description))
 ```
 
 * For the purposes of this blog, I decided to focus on the Healthcare & Medical industry. I also created a classifier for Banking and Financial Industry but the results were less than clearcut with jobs in the Information & Communication Technology and Insurance industry among others overlapping (as expected given the similarities between the industries). Healthcare & Medical appeared more insulated, although a few industries did encroach, in particular, Education and Community Services.
@@ -112,6 +116,7 @@ descriptions_classifier <- naiveBayes(descriptions_train, as.factor(descriptions
 * Let's now make predictions on the target dataset and check the performance of the classifier.
 
 ```{r,eval = TRUE, warning=FALSE}
+
 descriptions_classifier <- naiveBayes(descriptions_train, as.factor(descriptions_train_labels),laplace=1)
 
 descriptions_test_pred <- predict(descriptions_classifier, descriptions_test, type = "raw")
@@ -127,5 +132,15 @@ CrossTable(descriptions_test_class, descriptions_test_labels,
 ```
 
 * The model was able to classify 92 percent of all the job descriptions as belonging to the Healthcare & Medical industry or not. Not bad!
-* Now, imagine if we had a system in place that picked up job descriptions through a job site API and we received an email on a recurrent basis with jobs in the industry we were after. We would be worried about the false negatives (15), jobs that were in the industry we are after but which we did not receive because our classifier said they weren't! Rest assured, there are methodologies to skew the results so that false negatives are penalised and therefore reduce its occurrence - refer to the *C5.0* package.
-* Yikes, this blog is getting longer than I anticipated. I'll end it here.
+* Now, imagine if we had a system in place that picked up job descriptions through a job site API and we received an email on a recurrent basis with jobs in the industry we were after. We would be worried about the false negatives (17), jobs that were in the industry we are after but which we did not receive because our classifier said they weren't! Rest assured, there are methodologies to skew the results so that false negatives are penalised and therefore reduce its occurrence - refer to the *C5.0* package.
+* Yikes, this blog is getting longer than I anticipated. I'll wrap it up here. Following is just a glimpse of the industries prominent in the false positives.
+
+```{r,eval = TRUE, warning=FALSE}
+as.data.frame(cbind(A=data_flagged[-train_sample,]$job_description,category=data_flagged[-train_sample,]$category,descriptions_test_class,descriptions_test_pred_yes)) %>%
+  filter(descriptions_test_class=="Yes") %>%
+  filter(!(category %in% c("Healthcare & Medical"))) %>%
+  group_by(category) %>%
+  tally() %>%
+  arrange(desc(n)) %>%
+  filter(n>1)
+```

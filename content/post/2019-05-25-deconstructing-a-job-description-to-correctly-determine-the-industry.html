@@ -1,7 +1,7 @@
 ---
-title: Correctly determine the Industry
+title: Guess that Industry
 author: Scott Lee
-date: '2019-05-25'
+date: '2019-04-21'
 categories:
   - R
 tags:
@@ -15,7 +15,7 @@ slug: deconstructing-a-job-description-to-correctly-determine-the-industry
 <p><strong>Some Context</strong></p>
 <p>After reading <a href="https://www.amazon.com.au/Machine-Learning-Third-Brett-Lantz/dp/1788295862/ref=asc_df_1788295862/">this great machine learning textbook by Brett Lantz</a>, I was left wondering where I could use some of the techniques taught in the book for my personal use.</p>
 <p>Personally, when I search for jobs on websites like Seek, I tend to narrow my search to a specific role. The dangers with this is that, in recent times, data roles can go by many names. Different companies may use a different title for essentially the same role. Searching can therefore become difficult because of this. Even if you do find a role that sounds right for you, you realise after reading the job description it isn’t!</p>
-<p>Using a dataset available in Kaggle (<a href="https://www.kaggle.com/PromptCloudHQ/australian-job-listings-data-from-seek-job-board">Australian job listings data from Seek job board</a>), I decided to deconstruct the job description, word by word, to build a Naive Bayes classifier that would predict which industry the job falls under.</p>
+<p>Using a dataset available in Kaggle (<a href="https://www.kaggle.com/PromptCloudHQ/australian-job-listings-data-from-seek-job-board">Australian job listings data from Seek job board</a>), I decided to deconstruct the job description, word by word, to build a Naive Bayes classifier that could predict which industry the job falls under.</p>
 <p><strong>Workflow</strong></p>
 <p>The workflow follows closely to what Brett Lantz uses in his textbook - so check the textbook out!</p>
 <ul>
@@ -37,9 +37,13 @@ slug: deconstructing-a-job-description-to-correctly-determine-the-industry
 ##   geo = col_character(),
 ##   state = col_character(),
 ##   salary_offered = col_character()
-## )</code></pre>
+## )
+
+data &lt;- data %&gt;% 
+  select(job_description,category) %&gt;%
+  filter(!is.na(job_description))</code></pre>
 <ul>
-<li>For the purposes of this blog, I decided to focus on the Healthcare &amp; Medical industry. I also created a classifier for Banking and Financial Industry but the results were less than clearcut with jobs in the Information &amp; Communication Technology and Insurance industry among others overlapping and also getting returned back (as expected given the similarities between the industries). Healthcare &amp; Medical appeared more insulated, although a few industries did encroach, in particular, Education and Community Services.</li>
+<li>For the purposes of this blog, I decided to focus on the Healthcare &amp; Medical industry. I also created a classifier for Banking and Financial Industry but the results were less than clearcut with jobs in the Information &amp; Communication Technology and Insurance industry among others overlapping (as expected given the similarities between the industries). Healthcare &amp; Medical appeared more insulated, although a few industries did encroach, in particular, Education and Community Services.</li>
 </ul>
 <pre class="r"><code>data_flagged &lt;- data %&gt;%
   mutate(flag=ifelse(category %in% c(&quot;Healthcare &amp; Medical&quot;),&quot;Yes&quot;,&quot;No&quot;)) %&gt;%
@@ -69,14 +73,95 @@ descriptions_test_labels &lt;- data_flagged[-train_sample,]$flag</code></pre>
 <pre class="r"><code>prop.table(table(descriptions_train_labels))
 ## descriptions_train_labels
 ##         No        Yes 
-## 0.91984127 0.08015873
+## 0.91719577 0.08280423
 prop.table(table(descriptions_test_labels))
 ## descriptions_test_labels
 ##         No        Yes 
-## 0.92418462 0.07581538</code></pre>
+## 0.92063492 0.07936508</code></pre>
 <ul>
-<li>Following is a wordcloud of those job descriptions marked as belonging to the Healthcare &amp; Medical Industry.</li>
+<li>Following is a wordcloud of those job descriptions marked as belonging to the Healthcare &amp; Medical Industry with words that appear the most appearing bigger and bolder. Looks consistent with jobs in this industry?</li>
 </ul>
 <pre class="r"><code>yes &lt;- subset(data_flagged,flag==&quot;Yes&quot;)
 wordcloud(yes$job_description,max.words = 100,scale = c(3, 0.5),random.order = FALSE)</code></pre>
 <p><img src="/post/2019-05-25-deconstructing-a-job-description-to-correctly-determine-the-industry_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>
+<ul>
+<li>We now need to reduce our test and training set by reducing the number of columns we have - at the moment it’s far too large! We do this by filtering them to only frequently occurring words (in my case, the word needs to appear in at least 60 job descriptions in the training dataset). Once this is done, our matrix needs to be transformed so that each cell represents an indicator (1 indicating that the word appears and a 0 meaning it doesn’t appear in the job description). This is because Naive Bayes classifier needs categorical features.</li>
+</ul>
+<pre class="r"><code>descriptions_freq_words &lt;- findFreqTerms(descriptions_dtm_train, 60)
+
+descriptions_dtm_freq_train &lt;- descriptions_dtm_train[,descriptions_freq_words]
+descriptions_dtm_freq_test &lt;- descriptions_dtm_test[,descriptions_freq_words]
+
+convert_counts &lt;- function(x) {
+  x &lt;- ifelse(x &gt; 0, &quot;Yes&quot;, &quot;No&quot;)
+}
+
+descriptions_train &lt;- as.data.frame(apply(descriptions_dtm_freq_train, MARGIN = 2,
+                   convert_counts))
+descriptions_test &lt;- as.data.frame(apply(descriptions_dtm_freq_test, MARGIN = 2,
+                            convert_counts))</code></pre>
+<ul>
+<li>We now train our dataset using the Naive Bayes classifier available in the <em>e1071</em> package. <strong>Please ensure that the target labels (i.e. Yes/No) need to be set as a factor vector, otherwise the following code will generate an error.</strong></li>
+</ul>
+<pre class="r"><code>descriptions_classifier &lt;- naiveBayes(descriptions_train, as.factor(descriptions_train_labels),laplace=1)</code></pre>
+<ul>
+<li>Let’s now make predictions on the target dataset and check the performance of the classifier.</li>
+</ul>
+<pre class="r"><code>
+descriptions_classifier &lt;- naiveBayes(descriptions_train, as.factor(descriptions_train_labels),laplace=1)
+
+descriptions_test_pred &lt;- predict(descriptions_classifier, descriptions_test, type = &quot;raw&quot;)
+
+descriptions_test_class &lt;- predict(descriptions_classifier, descriptions_test)
+
+descriptions_test_pred_yes &lt;- as.data.frame(descriptions_test_pred) %&gt;%
+  select(Yes)
+
+CrossTable(descriptions_test_class, descriptions_test_labels,
+           prop.chisq = FALSE, prop.c = FALSE, prop.r = FALSE,
+           dnn = c(&#39;predicted&#39;, &#39;actual&#39;))
+## 
+##  
+##    Cell Contents
+## |-------------------------|
+## |                       N |
+## |         N / Table Total |
+## |-------------------------|
+## 
+##  
+## Total Observations in Table:  945 
+## 
+##  
+##              | actual 
+##    predicted |        No |       Yes | Row Total | 
+## -------------|-----------|-----------|-----------|
+##           No |       813 |        17 |       830 | 
+##              |     0.860 |     0.018 |           | 
+## -------------|-----------|-----------|-----------|
+##          Yes |        57 |        58 |       115 | 
+##              |     0.060 |     0.061 |           | 
+## -------------|-----------|-----------|-----------|
+## Column Total |       870 |        75 |       945 | 
+## -------------|-----------|-----------|-----------|
+## 
+## </code></pre>
+<ul>
+<li>The model was able to classify 92 percent of all the job descriptions as belonging to the Healthcare &amp; Medical industry or not. Not bad!</li>
+<li>Now, imagine if we had a system in place that picked up job descriptions through a job site API and we received an email on a recurrent basis with jobs in the industry we were after. We would be worried about the false negatives (17), jobs that were in the industry we are after but which we did not receive because our classifier said they weren’t! Rest assured, there are methodologies to skew the results so that false negatives are penalised and therefore reduce its occurrence - refer to the <em>C5.0</em> package.</li>
+<li>Yikes, this blog is getting longer than I anticipated. I’ll wrap it up here. Following is just a glimpse of the industries prominent in the false positives.</li>
+</ul>
+<pre class="r"><code>as.data.frame(cbind(A=data_flagged[-train_sample,]$job_description,category=data_flagged[-train_sample,]$category,descriptions_test_class,descriptions_test_pred_yes)) %&gt;%
+  filter(descriptions_test_class==&quot;Yes&quot;) %&gt;%
+  filter(!(category %in% c(&quot;Healthcare &amp; Medical&quot;))) %&gt;%
+  group_by(category) %&gt;%
+  tally() %&gt;%
+  arrange(desc(n)) %&gt;%
+  filter(n&gt;1)
+## # A tibble: 5 x 2
+##   category                                   n
+##   &lt;fct&gt;                                  &lt;int&gt;
+## 1 Community Services &amp; Development          18
+## 2 Education &amp; Training                      18
+## 3 Government &amp; Defence                       6
+## 4 Administration &amp; Office Support            4
+## 5 Information &amp; Communication Technology     2</code></pre>

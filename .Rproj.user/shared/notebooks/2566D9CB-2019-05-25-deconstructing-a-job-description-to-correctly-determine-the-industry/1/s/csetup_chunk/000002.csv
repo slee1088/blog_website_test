@@ -1,0 +1,32 @@
+"0","knitr::opts_chunk$set(collapse = TRUE)"
+"0","library(readr)"
+"0","library(dplyr)"
+"2","
+Attaching package: ‘dplyr’
+
+"
+"2","The following objects are masked from ‘package:stats’:
+
+    filter, lag
+
+"
+"2","The following objects are masked from ‘package:base’:
+
+    intersect, setdiff, setequal, union
+
+"
+"0","library(tm)"
+"2","package ‘tm’ was built under R version 3.5.3"
+"2","Loading required package: NLP
+"
+"2","package ‘NLP’ was built under R version 3.5.2"
+"0","library(SnowballC)"
+"2","package ‘SnowballC’ was built under R version 3.5.2"
+"0","library(wordcloud)"
+"2","package ‘wordcloud’ was built under R version 3.5.3"
+"2","Loading required package: RColorBrewer
+"
+"0","library(e1071)"
+"2","package ‘e1071’ was built under R version 3.5.3"
+"0","library(gmodels)"
+"2","package ‘gmodels’ was built under R version 3.5.3"

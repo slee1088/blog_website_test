@@ -1,0 +1,7 @@
+"0","descriptions_corpus <- VCorpus(VectorSource(data_flagged$job_description)) ##supply job descriptions into VCorpus"
+"0","descriptions_corpus_clean <- tm_map(descriptions_corpus,content_transformer(tolower)) ##text transformation - lowercase"
+"0","descriptions_corpus_clean <- tm_map(descriptions_corpus_clean, removeNumbers) ##remove numbers"
+"0","descriptions_corpus_clean <- tm_map(descriptions_corpus_clean,removeWords, stopwords()) ##list of stopwords listed in the tm package"
+"0","descriptions_corpus_clean <- tm_map(descriptions_corpus_clean, removePunctuation)"
+"0","descriptions_corpus_clean <- tm_map(descriptions_corpus_clean, stripWhitespace)"
+"0","descriptions_dtm <- DocumentTermMatrix(descriptions_corpus_clean) ##this will create a sparse matrix with all the words found in the above having its own column with the number of its occurrence for each job description listed in the cell"

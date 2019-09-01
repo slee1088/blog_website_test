@@ -1,0 +1,3 @@
+"0","data_flagged <- data %>%"
+"0","  mutate(flag=ifelse(category %in% c(""Healthcare & Medical""),""Yes"",""No"")) %>%"
+"0","  mutate(no_chars=nchar(job_description))"
