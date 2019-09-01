@@ -107,7 +107,7 @@ descriptions_test <- as.data.frame(apply(descriptions_dtm_freq_test, MARGIN = 2,
                             convert_counts))
 ```
 
-* We now train our dataset using the Naive Bayes classifier available in the *e1071* package. **Please ensure that the target labels (i.e. Yes/No) need to be set as a factor vector, otherwise the following code will generate an error.**
+* We now train our dataset using the Naive Bayes classifier available in the *e1071* package. **Please ensure that the target labels (i.e. Yes/No) are set to a factor vector, otherwise the following code will generate an error.**
 
 ```{r,eval = TRUE, warning=FALSE}
 descriptions_classifier <- naiveBayes(descriptions_train, as.factor(descriptions_train_labels),laplace=1)

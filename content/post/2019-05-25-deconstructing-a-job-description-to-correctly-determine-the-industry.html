@@ -101,7 +101,7 @@ descriptions_train &lt;- as.data.frame(apply(descriptions_dtm_freq_train, MARGIN
 descriptions_test &lt;- as.data.frame(apply(descriptions_dtm_freq_test, MARGIN = 2,
                             convert_counts))</code></pre>
 <ul>
-<li>We now train our dataset using the Naive Bayes classifier available in the <em>e1071</em> package. <strong>Please ensure that the target labels (i.e. Yes/No) need to be set as a factor vector, otherwise the following code will generate an error.</strong></li>
+<li>We now train our dataset using the Naive Bayes classifier available in the <em>e1071</em> package. <strong>Please ensure that the target labels (i.e. Yes/No) are set to a factor vector, otherwise the following code will generate an error.</strong></li>
 </ul>
 <pre class="r"><code>descriptions_classifier &lt;- naiveBayes(descriptions_train, as.factor(descriptions_train_labels),laplace=1)</code></pre>
 <ul>
