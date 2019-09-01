@@ -74,3 +74,9 @@ prop.table(table(descriptions_test_labels))
 ## descriptions_test_labels
 ##         No        Yes 
 ## 0.92418462 0.07581538</code></pre>
+<ul>
+<li>Following is a wordcloud of those job descriptions marked as belonging to the Healthcare &amp; Medical Industry.</li>
+</ul>
+<pre class="r"><code>yes &lt;- subset(data_flagged,flag==&quot;Yes&quot;)
+wordcloud(yes$job_description,max.words = 100,scale = c(3, 0.5),random.order = FALSE)</code></pre>
+<p><img src="/post/2019-05-25-deconstructing-a-job-description-to-correctly-determine-the-industry_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>
