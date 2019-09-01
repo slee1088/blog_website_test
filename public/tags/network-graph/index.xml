@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Network Graph on Scott&#39;s Random Data Blog</title>
+    <link>/tags/network-graph/</link>
+    <description>Recent content in Network Graph on Scott&#39;s Random Data Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Sat, 13 Oct 2018 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="/tags/network-graph/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Testing network graphs using D3</title>
+      <link>/2018/10/13/test-network-graphs/</link>
+      <pubDate>Sat, 13 Oct 2018 00:00:00 +0000</pubDate>
+      
+      <guid>/2018/10/13/test-network-graphs/</guid>
+      <description>I was working on the igraph package in R at work a couple of weeks ago and although it did the job, it lacked a bit of a visual presence. Thought I’d have a look at D3 Network graphs. Looks promising thus far! Enjoying the interactivity of the nodes.
+library(networkD3)data(MisLinks)data(MisNodes)forceNetwork(Links = MisLinks, Nodes = MisNodes, Source = &amp;quot;source&amp;quot;,Target = &amp;quot;target&amp;quot;, Value = &amp;quot;value&amp;quot;, NodeID = &amp;quot;name&amp;quot;,Group = &amp;quot;group&amp;quot;, opacity = 1){&#34;</description>
+    </item>
+    
+  </channel>
+</rss>

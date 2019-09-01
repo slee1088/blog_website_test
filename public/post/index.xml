@@ -32,5 +32,15 @@ After reading this really good machine learning textbook by Brett Lantz, I was l
 Personally, when I search for jobs on websites like Seek, I tend to narrow my search to a specific role. The dangers with this is that, in recent times, data roles can go by many names. Different companies may use a different title for essentially the same role.</description>
     </item>
     
+    <item>
+      <title>Testing network graphs using D3</title>
+      <link>/2018/10/13/test-network-graphs/</link>
+      <pubDate>Sat, 13 Oct 2018 00:00:00 +0000</pubDate>
+      
+      <guid>/2018/10/13/test-network-graphs/</guid>
+      <description>I was working on the igraph package in R at work a couple of weeks ago and although it did the job, it lacked a bit of a visual presence. Thought I’d have a look at D3 Network graphs. Looks promising thus far! Enjoying the interactivity of the nodes.
+library(networkD3)data(MisLinks)data(MisNodes)forceNetwork(Links = MisLinks, Nodes = MisNodes, Source = &amp;quot;source&amp;quot;,Target = &amp;quot;target&amp;quot;, Value = &amp;quot;value&amp;quot;, NodeID = &amp;quot;name&amp;quot;,Group = &amp;quot;group&amp;quot;, opacity = 1){&#34;</description>
+    </item>
+    
   </channel>
 </rss>
