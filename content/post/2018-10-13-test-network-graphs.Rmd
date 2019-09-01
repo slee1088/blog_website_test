@@ -26,4 +26,3 @@ forceNetwork(Links = MisLinks, Nodes = MisNodes, Source = "source",
 ```
 
 
-<iframe src="new 2.html"></iframe>
