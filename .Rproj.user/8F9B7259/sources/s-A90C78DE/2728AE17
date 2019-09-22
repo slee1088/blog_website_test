@@ -1,0 +1,23 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1567326819249.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "0",
+    "id" : "2728AE17",
+    "lastKnownWriteTime" : 1567329596,
+    "last_content_update" : 1567329596623,
+    "path" : "~/GitHub/blog_website/content/post/2018-10-13-test-network-graphs.Rmd",
+    "project_path" : "content/post/2018-10-13-test-network-graphs.Rmd",
+    "properties" : {
+        "cursorPosition" : "27,0",
+        "last_setup_crc32" : "",
+        "scrollLine" : "0"
+    },
+    "relative_order" : 7,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_markdown"
+}

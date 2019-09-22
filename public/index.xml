@@ -6,10 +6,21 @@
     <description>Recent content on Scott&#39;s Random Data Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Thu, 20 Jun 2019 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Sun, 22 Sep 2019 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Text Generation with LSTM - Last words</title>
+      <link>/2019/09/22/text-generation-with-lstm-last-words/</link>
+      <pubDate>Sun, 22 Sep 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/2019/09/22/text-generation-with-lstm-last-words/</guid>
+      <description>Some Context
+I noticed around a year ago while writing an email using Gmail that the application was suggesting how I should finish a sentence. A similar feature was added in LinkedIn not too while ago suggesting phrases to use on messages.
+This piqued my interest and I started looking into how this was done and came across this amazing book by Francois Chollet and JJ Allaire which goes from basic theory to advanced practical applications on deep learning using the Keras framework (with Tensorflow as the backend engine).</description>
+    </item>
     
     <item>
       <title>Scraping a website and sending the contents via email</title>
@@ -48,15 +59,6 @@ Personally, when I search for jobs on websites like Seek, I tend to narrow my se
       
       <guid>/about/</guid>
       <description>Hi there, I&amp;rsquo;m Scott, currently working as a data analyst at the Commonwealth Bank of Australia. I set this blog up to act as a repository for some of the interesting pieces of work that I do in my spare time and also to act as a quick resource for myself and others in my field for trivial tasks that can get easily forgotten in the details such as remembering the connection string used to connect to SQL server from a client software.</description>
-    </item>
-    
-    <item>
-      <title></title>
-      <link>/1/01/01/</link>
-      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      
-      <guid>/1/01/01/</guid>
-      <description>.link {stroke: #666;opacity: 0.4;stroke-width: 1.5px;}.node circle {stroke: #fff;opacity: 0.4;stroke-width: 1.5px;}.node:not(:hover) .nodetext {display: none;}text {font: 7px serif;opacity: 0.4;pointer-events: none;} var links = [ { &#34;source&#34; : 1, &#34;target&#34; : 0, &#34;value&#34; : 1 }, { &#34;source&#34; : 2, &#34;target&#34; : 0, &#34;value&#34; : 8 }, { &#34;source&#34; : 3, &#34;</description>
     </item>
     
   </channel>

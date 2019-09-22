@@ -6,10 +6,21 @@
     <description>Recent content in R on Scott&#39;s Random Data Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Thu, 20 Jun 2019 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Sun, 22 Sep 2019 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="/categories/r/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Text Generation with LSTM - Last words</title>
+      <link>/2019/09/22/text-generation-with-lstm-last-words/</link>
+      <pubDate>Sun, 22 Sep 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/2019/09/22/text-generation-with-lstm-last-words/</guid>
+      <description>Some Context
+I noticed around a year ago while writing an email using Gmail that the application was suggesting how I should finish a sentence. A similar feature was added in LinkedIn not too while ago suggesting phrases to use on messages.
+This piqued my interest and I started looking into how this was done and came across this amazing book by Francois Chollet and JJ Allaire which goes from basic theory to advanced practical applications on deep learning using the Keras framework (with Tensorflow as the backend engine).</description>
+    </item>
     
     <item>
       <title>Scraping a website and sending the contents via email</title>

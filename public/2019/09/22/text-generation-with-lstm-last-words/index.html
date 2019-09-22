@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="generator" content="Hugo 0.57.2" />
+
+
+<title>Text Generation with LSTM - Last words - Scott&#39;s Random Data Blog</title>
+<meta property="og:title" content="Text Generation with LSTM - Last words - Scott&#39;s Random Data Blog">
+
+
+  <link href='/home.png' rel='icon' type='image/x-icon'/>
+
+
+
+  
+
+
+
+
+
+
+
+
+<link href='//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css' rel='stylesheet' type='text/css' />
+
+
+
+<link rel="stylesheet" href="/css/fonts.css" media="all">
+<link rel="stylesheet" href="/css/main.css" media="all">
+
+
+
+  </head>
+  <body>
+    <div class="wrapper">
+      <header class="header">
+        <nav class="nav">
+  <a href="/" class="nav-logo">
+    <img src="/images/home.png"
+         width="50"
+         height="50"
+         alt="Logo">
+  </a>
+
+  <ul class="nav-links">
+    
+    <li><a href="/about/">About</a></li>
+    
+    <li><a href="https://github.com/slee1088">GitHub</a></li>
+    
+  </ul>
+</nav>
+
+      </header>
+
+
+<main class="content" role="main">
+
+  <article class="article">
+    
+    <span class="article-duration">10 min read</span>
+    
+
+    <h1 class="article-title">Text Generation with LSTM - Last words</h1>
+
+    
+    <span class="article-date">2019-09-22</span>
+    
+
+    <div class="article-content">
+      
+
+
+<p><strong>Some Context</strong></p>
+<p>I noticed around a year ago while writing an email using Gmail that the application was suggesting how I should finish a sentence. A similar feature was added in LinkedIn not too while ago suggesting phrases to use on messages.</p>
+<p>This piqued my interest and I started looking into how this was done and came across this <a href="https://www.amazon.com/Deep-Learning-R-Francois-Chollet/dp/161729554X">amazing book by Francois Chollet and JJ Allaire</a> which goes from basic theory to advanced practical applications on deep learning using the Keras framework (with Tensorflow as the backend engine).</p>
+<p>I came across a dataset on <a href="https://www.kaggle.com/mykhe1097/last-words-of-death-row-inmates">Kaggle</a> which contains last words made by death row inmates and thought it would be interesting to see if I could apply LSTM to predict/generate coherent human-like words uttered by death row inmates if, for instance they didn’t end up finishing their sentence.</p>
+<p>There’s a chapter called <em>Generative deep learning</em> in the book which goes through a workflow on text generation using Long Short-Term Memory (LSTM) layers which I will try to apply here.</p>
+<p><strong>Workflow</strong></p>
+<ul>
+<li>Preparing the data. Each of the statements are in individual rows. We need to have them collapsed into one record so that we can use it to generate the dataset that can fit into our LSTM model.</li>
+</ul>
+<pre class="r"><code>text_dump &lt;- read_csv(&quot;Texas Last Statement - CSV.csv&quot;,locale = readr::locale(encoding = &quot;windows-1252&quot;)) 
+## Parsed with column specification:
+## cols(
+##   .default = col_double(),
+##   LastName = col_character(),
+##   FirstName = col_character(),
+##   Race = col_character(),
+##   CountyOfConviction = col_character(),
+##   LastStatement = col_character()
+## )
+## See spec(...) for full column specifications.
+
+text_collapsed &lt;- paste(text_dump$LastStatement,collapse=&quot; &quot;) 
+
+text &lt;- str_to_lower(text_collapsed)</code></pre>
+<ul>
+<li><p>We need a 3D array for the LSTM model, the first dimension being the number of snippets of words we have extracted from the entire single record above, the second dimension being the number of characters in the snippets (we will fix this number to 60) and the last dimension being the number of unique characters in our entire record - as per the book the dimensions are (sequences, maxlen, unique_characters).</p></li>
+<li><p>Just like the Naives Bayes Classifer that was covered in an earlier blog, we require categorical features (one-hot encoding is performed in the loop below).</p></li>
+</ul>
+<pre class="r"><code>maxlen &lt;- 60 #this is the number of characters in each snippet
+
+step &lt;- 3 #new snippets will be generated every 3 characters 
+
+text_indexes &lt;- seq(1,nchar(text)-maxlen,by=step)
+sentences &lt;-  str_sub(text,text_indexes,text_indexes+maxlen-1) #these are our snippets
+next_chars &lt;-  str_sub(text,text_indexes+maxlen,text_indexes+maxlen) #our targets
+
+cat(&quot;Number of snippets: &quot;,length(sentences),&quot;\n&quot;)
+## Number of snippets:  78235
+
+chars &lt;- unique(sort(strsplit(text,&quot;&quot;)[[1]])) #the following will form our third dimension
+cat(&quot;Unique characters:&quot;,length(chars),&quot;\n&quot;)
+## Unique characters: 56
+char_indices &lt;- 1:length(chars)
+names(char_indices) &lt;- chars
+
+x &lt;- array(0L,dim=c(length(sentences),maxlen,length(chars))) #initiate the 3D array
+y &lt;- array(0L,dim=c(length(sentences),length(chars))) #this array contains the corresponding targets
+
+for (i in 1:length(sentences)){ ###populate the arrays
+  sentence &lt;- strsplit(sentences[[i]],&quot;&quot;)[[1]]
+  for (t in 1:length(sentence)) {
+    char &lt;- sentence[[t]]
+    x[i,t,char_indices[[char]]] &lt;- 1
+  }
+  next_char &lt;- next_chars[[i]]
+  y[i,char_indices[[next_char]]] &lt;- 1
+}</code></pre>
+<ul>
+<li>Build the network - a single-layer LSTM model is used along with a categorical optimiser to train the model. For an in-depth understanding of the model used here, please refer to the textbook which explains it very well.</li>
+</ul>
+<pre class="r"><code>model &lt;- keras_model_sequential() %&gt;%
+  layer_lstm(units=128,input_shape = c(maxlen,length(chars))) %&gt;%
+  layer_dense(units=length(chars),activation=&quot;softmax&quot;)
+## Warning in normalizePath(path.expand(path), winslash, mustWork):
+## path[1]=&quot;C:\Users\scott\Anaconda3\envs\rstudio/python.exe&quot;: The system
+## cannot find the file specified
+
+optimizer &lt;- optimizer_rmsprop(lr = 0.01)
+
+model %&gt;% compile(
+  loss = &quot;categorical_crossentropy&quot;,
+  optimizer = optimizer
+)</code></pre>
+<ul>
+<li>Before feeding our dataset into our build model, we need to create a sampling function which will have as one of its parameter “temperature”. Technical details can be found in the book but essentially it is a parameter that determines how random our character generation will be, higher temperature generating higher randomness in our character selection.</li>
+</ul>
+<pre class="r"><code>sample_next_char &lt;- function(preds,temperature = 1.0) {
+  preds &lt;- as.numeric(preds)
+  preds &lt;-  log(preds)/temperature
+  exp_preds &lt;- exp(preds)
+  preds &lt;- exp_preds/sum(exp_preds)
+  which.max(t(rmultinom(1,1,preds)))
+}</code></pre>
+<ul>
+<li><p>Now it’s time to generate those texts! Due to the limitation of my PC, I will set the training iteration to just 30 (epochs = 30). Ideally, we would want a much higher iteration count, say up to 60, to ensure that the model has mostly converged. I’ve added comments into the code to help understanding what’s happening.</p></li>
+<li><p>You will notice that as the epoch count increases, the text starts to increase in coherency. Note also the effect of the temperature. A low temperature results in repetitive and predicable word snippets. With higher temperatures, the generated text becomes more obscure and loses structure, sometimes inventing completely new words. The middle ground (temperature: 0.5) is probably the most interest to us as it retains most of it’s structure but isn’t completely repetitive.</p></li>
+</ul>
+<pre class="r"><code>set.seed(1234)
+
+for (epoch in 1:30) {
+
+  model %&gt;% fit(x,y,batch_size=128,epochs = 1) #fit our dataset to the model
+  
+  start_index &lt;- sample(1:(nchar(text)-maxlen-1),1) #random indexing to generate a random snippet to use for generating text
+  seed_text &lt;-  str_sub(text,start_index,start_index + maxlen - 1)
+  
+  if (epoch %in% c(1,5,10,20,30)){
+    cat(&quot;**--Generating with seed:&quot;,seed_text,&quot;\n\n&quot;)
+  }
+  
+  for (temperature in c(0.2,0.5,1.0,1.2)) {
+    if (epoch %in% c(1,5,10,20,30)){
+      cat(&quot;--temperature:&quot;,temperature,&quot;--epoch:&quot;,epoch,&quot;\n&quot;)
+      cat(seed_text,&quot;\n&quot;)
+    }
+    
+    generated_text &lt;- seed_text
+    
+    for (i in 1:150) { #we generate 150 characters that gets appended to our randomly chosen snippet 
+      sampled &lt;- array(0,dim=c(1,maxlen,length(chars)))
+      generated_chars &lt;- strsplit(generated_text,&quot;&quot;)[[1]]
+      for (t in 1:length(generated_chars)){
+        char &lt;- generated_chars[[t]]
+        sampled[1,t,char_indices[[char]]] &lt;- 1
+        
+      }
+      preds &lt;- model %&gt;% predict(sampled,verbose=0)
+      next_index &lt;- sample_next_char(preds[1,],temperature) #this is where we use our sample function to determine our next character
+      next_char &lt;- chars[[next_index]]
+      
+      generated_text &lt;- paste0(generated_text,next_char)
+      generated_text &lt;- substring(generated_text,2)
+      
+      if (epoch %in% c(1,5,10,20,30)){
+        cat(next_char)
+      }
+      
+    }
+    if (epoch %in% c(1,5,10,20,30)){
+      cat(&quot;\n\n&quot;)
+    }
+    
+  }
+}
+## **--Generating with seed: ones that i am truly, truly sorry for taking their loved one 
+## 
+## --temperature: 0.2 --epoch: 1 
+## ones that i am truly, truly sorry for taking their loved one 
+##  i hope the pain the poinne the with i hope the pain the pain the the pain the pain the poon the pain the pain the love i hope the pain the pain the p
+## 
+## --temperature: 0.5 --epoch: 1 
+## ones that i am truly, truly sorry for taking their loved one 
+##  it one my none i know the peins mer i have been mome and love the mech find god i love your i can the wet her out i have to soord the live i just wou
+## 
+## --temperature: 1 --epoch: 1 
+## ones that i am truly, truly sorry for taking their loved one 
+##  gry love the pariny, p ale for mabe indsy wand non we, theme is orry. macios. my niyt never ut, i&#39;m sorry. i now hepr me. but ul bring god. i love, i
+## 
+## --temperature: 1.2 --epoch: 1 
+## ones that i am truly, truly sorry for taking their loved one 
+## ar &quot;that jesnsert i have toouget betss give in rensud, a frem, thiind wed. donoe tyangaind parebrabosubine. hope for the inn irinu, ald ebew find iep 
+## 
+## **--Generating with seed: till have to go through this hell on earth. just remember th 
+## 
+## --temperature: 0.2 --epoch: 5 
+## till have to go through this hell on earth. just remember th 
+## e pain and son on the truth and i want to say that i love you all. i am sorry for the pass the the state and i want to say that i love you all. i am s
+## 
+## --temperature: 0.5 --epoch: 5 
+## till have to go through this hell on earth. just remember th 
+## at it is a done to my family. i would like to tell you all. i am sorry for the never meance and maright and i caused you. i want the love and the peop
+## 
+## --temperature: 1 --epoch: 5 
+## till have to go through this hell on earth. just remember th 
+## e grost proshed more thingion is my brothers. and keep thringanie theavarennay for be ding and the shefs their care rights justiletinue. everybody. i 
+## 
+## --temperature: 1.2 --epoch: 5 
+## till have to go through this hell on earth. just remember th 
+## e family for give ya&#39;ll. i want to sorry, the saufrmed to appleniby to give her, through this sins persed no nest me. ms. not fach all being night. ma
+## 
+## **--Generating with seed:  great honor. i feel it; i am going to sleep now. goodnight, 
+## 
+## --temperature: 0.2 --epoch: 10 
+##  great honor. i feel it; i am going to sleep now. goodnight, 
+##  the pain i caused you. i am sorry in a better for the pain i caused you. i love you all. i want to say to the pain i caused you and i am sorry to kno
+## 
+## --temperature: 0.5 --epoch: 10 
+##  great honor. i feel it; i am going to sleep now. goodnight, 
+##  and the pain i caused you. i don&#39;t know that i don&#39;t know that i didnng me and come to got stay i would like to tell my family and back christ about 
+## 
+## --temperature: 1 --epoch: 10 
+##  great honor. i feel it; i am going to sleep now. goodnight, 
+##  i am a nothing. witness paintod east rore and i love you, matiss you give humtoran the was will jessers, mandy earther. we want to thank everybody a 
+## 
+## --temperature: 1.2 --epoch: 10 
+##  great honor. i feel it; i am going to sleep now. goodnight, 
+##  those thank you. i am sorry appreciate year i had mmattor conuly pain and rratind dob, manky, wouldnce. do hope dip ginathe, iundeant. earth heme in 
+## 
+## **--Generating with seed: e, michael. grandbabies make the world go around. i love you 
+## 
+## --temperature: 0.2 --epoch: 20 
+## e, michael. grandbabies make the world go around. i love you 
+## , i would like to tell my family and i want to tell my family and i would like to tell my family and friends for your forgiveness for all of the victi
+## 
+## --temperature: 0.5 --epoch: 20 
+## e, michael. grandbabies make the world go around. i love you 
+##  all. i am a destrut who belones who way. i am in telling you have been back because i would like to tell my friends, the pain and something i have be
+## 
+## --temperature: 1 --epoch: 20 
+## e, michael. grandbabies make the world go around. i love you 
+##  all. i&#39;m realize and seeing the up toves stand in over herd roge. this bless both ÿity forgive me, i would like to take think i had done yes, i do. .
+## 
+## --temperature: 1.2 --epoch: 20 
+## e, michael. grandbabies make the world go around. i love you 
+##  rivlos. i hope, be sist me. i would like to tryve out this is what i will so hope you have. justiy&#39;sus vicks me babing. nivel be agreat of do. he to 
+## 
+## **--Generating with seed:  my family, i love y&#39;all. i am happy. i look into my family&#39; 
+## 
+## --temperature: 0.2 --epoch: 30 
+##  my family, i love y&#39;all. i am happy. i look into my family&#39; 
+## s family. i am so sorry. i don&#39;t have and life all of you all. i love you all. i am so sorry. i love you all. i am so sorry. i don&#39;t hate you all. i a
+## 
+## --temperature: 0.5 --epoch: 30 
+##  my family, i love y&#39;all. i am happy. i look into my family&#39; 
+## s family. i love you all. i am ready. thank you for eart and life responsible to your family and friends. i want to tell my family thank you for eart 
+## 
+## --temperature: 1 --epoch: 30 
+##  my family, i love y&#39;all. i am happy. i look into my family&#39; 
+## s family and i wish that get meams of who coldod this as i carress of the world. i talk ind continue of a let march arought. i would like to tadcally 
+## 
+## --temperature: 1.2 --epoch: 30 
+##  my family, i love y&#39;all. i am happy. i look into my family&#39; 
+## s one for yours, i&#39;ll see, mary because i&#39;m net everybody else, lead been firelmed this lecdsing therey hat, i caused hintit family. i&#39;m ready goods y</code></pre>
+
+    </div>
+  </article>
+
+  
+
+
+</main>
+
+      <footer class="footer">
+        <ul class="footer-links">
+          <li>
+            <a href="/index.xml" type="application/rss+xml" target="_blank">RSS feed</a>
+          </li>
+          <li>
+            <a href="https://gohugo.io/" class="footer-links-kudos">Made with <img src="/images/hugo-logo.png" alt="Img link to Hugo website" width="22" height="22"></a>
+          </li>
+        </ul>
+      </footer>
+
+    </div>
+    
+
+
+
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+
+
+
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/languages/r.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/languages/yaml.min.js"></script>
+<script>hljs.configure({languages: []}); hljs.initHighlightingOnLoad();</script>
+
+
+
+    
+<script src="/js/math-code.js"></script>
+<script async src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+
+
+    
+  </body>
+</html>
+

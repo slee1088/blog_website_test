@@ -1,3 +1,0 @@
-setwd("C:/Users/scott/Documents/Projects")
-
-twitter <- read.xlsx("Twitter_Data.xlsx")
