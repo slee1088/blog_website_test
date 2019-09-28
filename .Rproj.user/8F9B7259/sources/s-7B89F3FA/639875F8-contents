@@ -1,0 +1,16 @@
+
+
+
+
+
+library(keras)
+
+
+
+target_image_path <- "C:/Users/scott/Documents/Projects/target.png"
+style_reference_image_path <- "C:/Users/scott/Documents/Projects/style.png"
+img <- image_load(target_image_path)
+width <- img$size[[1]]
+height <- img$size[[2]]
+img_nrows <- 400
+img_ncols <- as.integer(width * img_nrows / height)

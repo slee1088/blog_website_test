@@ -58,7 +58,23 @@ Personally, when I search for jobs on websites like Seek, I tend to narrow my se
       <pubDate>Thu, 05 May 2016 21:48:51 -0700</pubDate>
       
       <guid>/about/</guid>
-      <description>Hi there, I&amp;rsquo;m Scott, currently working as a data analyst at the Commonwealth Bank of Australia. I set this blog up to act as a repository for some of the interesting pieces of work that I do in my spare time and also to act as a quick resource for myself and others in my field for trivial tasks that can get easily forgotten in the details such as remembering the connection string used to connect to SQL server from a client software.</description>
+      <description>Hi there, I&amp;rsquo;m Scott, currently working as a data analyst. I set this blog up to act as a repository for some of the interesting pieces of work that I do in my spare time and also to act as a quick resource for myself and others in my field for trivial tasks that can get easily forgotten in the details such as remembering the connection string used to connect to SQL server from a client software.</description>
+    </item>
+    
+    <item>
+      <title>References</title>
+      <link>/reference/</link>
+      <pubDate>Wed, 04 May 2016 21:48:51 -0700</pubDate>
+      
+      <guid>/reference/</guid>
+      <description>Some useful references
+R for Data Science by Hadley Wickham
+Data Wrangling Cheatsheet by RStudio
+Data Visualisation with ggplot2 Cheatsheet by RStudio
+Regular Expressions in R Cheatsheet by RStudio
+You don&amp;rsquo;t know Javascript (YDKJS)
+Tableau Deep Dives by Robert Curtis (Interworks)
+Comprehensive Blog for R</description>
     </item>
     
   </channel>
