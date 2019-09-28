@@ -18,3 +18,7 @@ title: References
 [Tableau Deep Dives by Robert Curtis (Interworks)](https://interworks.com/blog/rcurtis/2016/03/21/tableau-deep-dive-lod-introduction-detail/)
 
 [Comprehensive Blog for R](https://www.r-bloggers.com/)
+
+[RShiny Articles](https://shiny.rstudio.com/articles/)
+
+More to come...
