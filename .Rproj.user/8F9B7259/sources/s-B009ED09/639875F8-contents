@@ -14,3 +14,19 @@ width <- img$size[[1]]
 height <- img$size[[2]]
 img_nrows <- 400
 img_ncols <- as.integer(width * img_nrows / height)
+
+
+fibonacci <- function(n) {
+  
+  if(n==0){
+    x <- 0
+  } else if (n==1){
+    x <- 1
+  } else {
+    x <- fibonacci(n-2) + fibonacci(n-1)
+  }
+
+  return(x)
+}
+
+fibonacci(12)

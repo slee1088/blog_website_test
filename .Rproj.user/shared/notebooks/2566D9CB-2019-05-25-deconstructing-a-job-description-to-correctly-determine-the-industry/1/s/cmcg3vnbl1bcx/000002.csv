@@ -1,0 +1,1 @@
+"0","descriptions_classifier <- naiveBayes(descriptions_train, as.factor(descriptions_train_labels),laplace=1)"

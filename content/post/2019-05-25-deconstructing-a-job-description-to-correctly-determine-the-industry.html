@@ -146,9 +146,26 @@ CrossTable(descriptions_test_class, descriptions_test_labels,
 ## 
 ## </code></pre>
 <ul>
-<li>The model was able to classify 92 percent of all the job descriptions as belonging to the Healthcare &amp; Medical industry or not. Not bad!</li>
-<li>Now, imagine if we had a system in place that picked up job descriptions through a job site API and we received an email on a recurrent basis with jobs in the industry we were after. We would be worried about the false negatives (17), jobs that were in the industry we are after but which we did not receive because our classifier said they weren’t! Rest assured, there are methodologies to skew the results so that false negatives are penalised and therefore reduce its occurrence - refer to the <em>C5.0</em> package.</li>
-<li>Yikes, this blog is getting longer than I anticipated. I’ll wrap it up here. Following is a glimpse of the industries prominent in the false positives. Full code available <a href="https://github.com/slee1088/industry_classifier/blob/master/naive.r">here</a>.</li>
+<li><p>The model was able to classify 92 percent of all the job descriptions as belonging to the Healthcare &amp; Medical industry or not. Not bad! Or is it? Recall the distribution of our labels, we had Healthcare &amp; Medical industry representing approximately 8% of our test dataset. If we had guessed that all labels in the response were not in the Healthcare &amp; Medical industry, we would have also achieved 92 percent accuracy - without all this coding as well!</p></li>
+<li><p>We want to remove this mere chance from our accuracy. Kappa refers to what’s known as Cohen’s Kappa statistic. The Kappa statistic adjusts the accuracy scores by accounting for the model being entirely correct by mere chance. Note that there are myriad of measures currently being used for model performance, with the Kappa statistic just being one of them.</p></li>
+</ul>
+<pre class="r"><code>library(irr)
+## Loading required package: lpSolve
+test_df &lt;- as.data.frame(cbind(as.character(descriptions_test_class),descriptions_test_labels))
+kappa2(test_df)
+##  Cohen&#39;s Kappa for 2 Raters (Weights: unweighted)
+## 
+##  Subjects = 945 
+##    Raters = 2 
+##     Kappa = 0.569 
+## 
+##         z = 18 
+##   p-value = 0</code></pre>
+<ul>
+<li><p>The Kappa statistic of 56.9 percent suggests our model isn’t as good as we thought it initially was. However, the result isn’t too discouraging either - following off common interpretation of the Kappa statistic, the model is providing moderate agreement.</p></li>
+<li><p>An important point when it comes to models and making predictions is that there’s a high element of subjectivity involved. For our purposes, we don’t need absolute perfection when determining what jobs we want to see (we can tolerate a bit of leeway), this would be another story if we were trying to detect cancer lumps!</p></li>
+<li>Now, imagine if we followed through with our model and had a system in place that picked up job descriptions through a job site API, we would be worried about the false negatives (17), jobs that were in the industry we were after but which we did not receive because our classifier said they weren’t! Rest assured, there are methodologies to skew the results so that false negatives are penalised and therefore reduce its occurrence - there’s one for decision trees in the <em>C5.0</em> package.</li>
+<li><p>Yikes, this blog is getting longer than I anticipated. I’ll wrap it up here. Following is a glimpse of the industries prominent in the false positives - notice the potential for overlaps between the top three industries. Full code available <a href="https://github.com/slee1088/industry_classifier/blob/master/naive.r">here</a>.</p></li>
 </ul>
 <pre class="r"><code>as.data.frame(cbind(A=data_flagged[-train_sample,]$job_description,category=data_flagged[-train_sample,]$category,descriptions_test_class,descriptions_test_pred_yes)) %&gt;%
   filter(descriptions_test_class==&quot;Yes&quot;) %&gt;%

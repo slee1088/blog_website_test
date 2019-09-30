@@ -1,0 +1,2 @@
+"0","yes <- subset(data_flagged,flag==""Yes"")"
+"0","wordcloud(yes$job_description,max.words = 100,scale = c(3, 0.5),random.order = FALSE)"

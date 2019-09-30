@@ -1,0 +1,6 @@
+"0","set.seed(1234501) "
+"0","train_sample <- sample(4725,3780)"
+"0","descriptions_dtm_train <- descriptions_dtm[train_sample,]"
+"0","descriptions_dtm_test <- descriptions_dtm[-train_sample,]"
+"0","descriptions_train_labels <- data_flagged[train_sample,]$flag"
+"0","descriptions_test_labels <- data_flagged[-train_sample,]$flag"
