@@ -17,13 +17,12 @@ The objective is to transform a set of interrelated variables into a set of unre
 
 The mathematics behind PCA involves some linear algebra (primarily matrix algebra) and statistics. 
 
-Let **E** be a matrix containing the eigenvectors for the covariance matrix ($\hat\Sigma$) for our data. The eigenvectors in **E** are our principal components. As such, these are the requirements we need them to hold, the first a necessity and the second for convenience:
+Let **E** be a matrix containing the eigenvectors for the covariance matrix $\hat\Sigma$ generated for our data. The eigenvectors in **E** are our principal components. As such, these are the requirements we need them to hold, the first a necessity and the second for convenience:
 
 1. The principal component axes are orthogonal to each other - $e_i^Te_j = 0$ when $i \ne j$
 2. $e_j^Te_j = 1$ $\forall j$
 
 From the theory of matrices, for any positive semidefinite matrix there exists an orthogonal matrix **E** such that 
 
-\centering
-$\hat\Sigma$**E** $=$ **E**$\Lambda$ and $\hat\Sigma$ $=$ **E**$\Lambda E^T$
+[$\hat\Sigma$**E** $=$ **E**$\Lambda$ and $\hat\Sigma$ $=$ **E**$\Lambda E^T$]{style="float:centre"}
 
