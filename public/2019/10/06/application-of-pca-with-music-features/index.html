@@ -57,7 +57,7 @@
 
   <article class="article">
     
-    <span class="article-duration">1 min read</span>
+    <span class="article-duration">2 min read</span>
     
 
     <h1 class="article-title">Application of PCA with music features</h1>
@@ -79,8 +79,24 @@
 <li>The principal component axes are orthogonal to each other - <span class="math inline">\(e_i^Te_j = 0\)</span> when <span class="math inline">\(i \ne j\)</span></li>
 <li><span class="math inline">\(e_j^Te_j = 1\)</span> <span class="math inline">\(\forall j\)</span></li>
 </ol>
-<p>From the theory of matrices, for any positive semidefinite matrix there exists an orthogonal matrix <strong>E</strong> such that</p>
-<p><span style="float:center"><span class="math inline">\(\hat\Sigma E\)</span> <span class="math inline">\(=\)</span> <span class="math inline">\(E \Lambda\)</span> and <span class="math inline">\(\hat\Sigma\)</span> <span class="math inline">\(=\)</span> <span class="math inline">\(E\Lambda E^T\)</span></span></p>
+<p>From the theory of matrices, for any positive semidefinite matrix there exists an orthogonal matrix <span class="math inline">\(E\)</span> such that:</p>
+<center>
+<span class="math inline">\(\hat\Sigma E\)</span> <span class="math inline">\(=\)</span> <span class="math inline">\(E \Lambda\)</span> and <span class="math inline">\(\hat\Sigma\)</span> <span class="math inline">\(=\)</span> <span class="math inline">\(E\Lambda E^T\)</span>
+</center>
+<p>Here, <span class="math inline">\(\Lambda\)</span> is a diagonal matrix of non-negative values, containing the eigenvalues of <span class="math inline">\(\hat\Sigma E\)</span>. If we were to consider only the first eigenvector, the first equation becomes:</p>
+<center>
+<span class="math inline">\(\hat\Sigma E\)</span> <span class="math inline">\(=\)</span> <span class="math inline">\(\lambda_1 E\)</span>
+</center>
+<p>Once the eigenvectors are determined, we can find the principal component scores by the following transformation:</p>
+<center>
+<span class="math inline">\(z\)</span> <span class="math inline">\(=\)</span> <span class="math inline">\(x E\)</span>
+</center>
+<p>where x is a <span class="math inline">\(N\)</span> x <span class="math inline">\(e\)</span> matrix, <span class="math inline">\(N\)</span> being the number of observations and <span class="math inline">\(e\)</span> being the number of features in the dataset. We can think of <span class="math inline">\(z\)</span> as a rotation of the dataset <span class="math inline">\(x\)</span> to axes defined by <span class="math inline">\(E\)</span>.</p>
+<p>The principal component scores <span class="math inline">\(z\)</span> are uncorrelated because:</p>
+<center>
+<span class="math inline">\(var(x)\)</span> <span class="math inline">\(=\)</span> <span class="math inline">\(var(xE)\)</span> <span class="math inline">\(=\)</span> <span class="math inline">\(E^Tvar(x)E\)</span> <span class="math inline">\(=\)</span> <span class="math inline">\(E^T\hat\Sigma E\)</span> = <span class="math inline">\(\Lambda\)</span>
+</center>
+<p>Recall <span class="math inline">\(\Lambda\)</span> is a <strong>diagonal</strong> matrix containing the eigenvalues of <span class="math inline">\(\hat\Sigma\)</span>.</p>
 
     </div>
   </article>

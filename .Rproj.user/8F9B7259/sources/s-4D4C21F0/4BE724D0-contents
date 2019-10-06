@@ -22,7 +22,21 @@ Let $E$ be a matrix containing the eigenvectors for the covariance matrix $\hat\
 1. The principal component axes are orthogonal to each other - $e_i^Te_j = 0$ when $i \ne j$
 2. $e_j^Te_j = 1$ $\forall j$
 
-From the theory of matrices, for any positive semidefinite matrix there exists an orthogonal matrix **E** such that 
+From the theory of matrices, for any positive semidefinite matrix there exists an orthogonal matrix $E$ such that: 
 
-[$\hat\Sigma E$ $=$ $E \Lambda$ and $\hat\Sigma$ $=$ $E\Lambda E^T$]{style="float:center"}
+<center>$\hat\Sigma E$ $=$ $E \Lambda$ and $\hat\Sigma$ $=$ $E\Lambda E^T$</center>
+
+Here, $\Lambda$ is a diagonal matrix of non-negative values, containing the eigenvalues of $\hat\Sigma E$. If we were to consider only the first eigenvector, the first equation becomes:
+
+<center>$\hat\Sigma E$ $=$ $\lambda_1 E$</center>
+
+Once the eigenvectors are determined, we can find the principal component scores by the following transformation:
+
+<center>$z$ $=$ $x E$</center> where x is a $N$ x $e$ matrix, $N$ being the number of observations and $e$ being the number of features in the dataset. We can think of $z$ as a rotation of the dataset $x$ to axes defined by $E$.
+
+The principal component scores $z$ are uncorrelated because: 
+
+<center>$var(x)$ $=$ $var(xE)$ $=$ $E^Tvar(x)E$ $=$ $E^T\hat\Sigma E$ = $\Lambda$</center>
+
+Recall $\Lambda$ is a **diagonal** matrix containing the eigenvalues of $\hat\Sigma$.
 
