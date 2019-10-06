@@ -35,7 +35,9 @@ tags:
 <p>where x is a <span class="math inline">\(N\)</span> x <span class="math inline">\(e\)</span> matrix, <span class="math inline">\(N\)</span> being the number of observations and <span class="math inline">\(e\)</span> being the number of features in the dataset. We can think of <span class="math inline">\(z\)</span> as a rotation of the dataset <span class="math inline">\(x\)</span> to axes defined by <span class="math inline">\(E\)</span>.</p>
 <p>The principal component scores <span class="math inline">\(z\)</span> are uncorrelated because</p>
 <center>
-<span class="math inline">\(var(x)\)</span> <span class="math inline">\(=\)</span> <span class="math inline">\(var(xE)\)</span> <span class="math inline">\(=\)</span> <span class="math inline">\(E^Tvar(x)E\)</span> <span class="math inline">\(=\)</span> <span class="math inline">\(E^T\hat\Sigma E\)</span> = <span class="math inline">\(\Lambda\)</span>
+<span class="math inline">\(var(z)\)</span> <span class="math inline">\(=\)</span> <span class="math inline">\(var(xE)\)</span> <span class="math inline">\(=\)</span> <span class="math inline">\(E^Tvar(x)E\)</span> <span class="math inline">\(=\)</span> <span class="math inline">\(E^T\hat\Sigma E\)</span> = <span class="math inline">\(\Lambda\)</span>
 </center>
 <p>Recall <span class="math inline">\(\Lambda\)</span> is a <strong>diagonal</strong> matrix containing the eigenvalues of <span class="math inline">\(\hat\Sigma\)</span>.</p>
-<p>Using the eigenvalues, we can now determine which eigenvectors (components) we want to use or more importantly which ones to remove. A judgement call needs to be made. You will inevitably lose some information by culling components but if the eigenvalues are small, you won’t lose much.</p>
+<p>Using the eigenvalues, we can now determine which eigenvectors (components) we want to use or more importantly which ones to remove. A judgement call needs to be made with the help of the latent roots criterion and the scree test. You will inevitably lose some information by culling components but if the eigenvalues are small, you won’t lose much.</p>
+<p>For a thorough commentary, please refer to the following <a href="http://www.cs.otago.ac.nz/cosc453/student_tutorials/principal_components.pdf">link</a></p>
+<p><strong>Workflow</strong></p>

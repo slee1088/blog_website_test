@@ -36,9 +36,13 @@ Once the eigenvectors are determined, we can find the principal component scores
 
 The principal component scores $z$ are uncorrelated because 
 
-<center>$var(x)$ $=$ $var(xE)$ $=$ $E^Tvar(x)E$ $=$ $E^T\hat\Sigma E$ = $\Lambda$</center>
+<center>$var(z)$ $=$ $var(xE)$ $=$ $E^Tvar(x)E$ $=$ $E^T\hat\Sigma E$ = $\Lambda$</center>
 
 Recall $\Lambda$ is a **diagonal** matrix containing the eigenvalues of $\hat\Sigma$.
 
-Using the eigenvalues, we can now determine which eigenvectors (components) we want to use or more importantly which ones to remove. A judgement call needs to be made. You will inevitably lose some information by culling components but if the eigenvalues are small, you won't lose much.   
+Using the eigenvalues, we can now determine which eigenvectors (components) we want to use or more importantly which ones to remove. A judgement call needs to be made with the help of the latent roots criterion and the scree test. You will inevitably lose some information by culling components but if the eigenvalues are small, you won't lose much.  
+
+For a thorough commentary, please refer to the following [link](http://www.cs.otago.ac.nz/cosc453/student_tutorials/principal_components.pdf)
+
+**Workflow**
 
