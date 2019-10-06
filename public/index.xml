@@ -18,7 +18,7 @@
       
       <guid>/2019/10/06/application-of-pca-with-music-features/</guid>
       <description>Some Context
-Principal Components Analysis (PCA) is a tool going back decades used widely to identify patterns in data. Once patterns are discovered, one can compress the data by reducing the number of dimensions without much loss of information.
+Principal Components Analysis (PCA) is a tool that goes back decades used widely to identify patterns in data. Once patterns are discovered, one can compress the data by reducing the number of dimensions without much loss of information.
 The objective is to transform a set of interrelated variables into a set of unrelated linear combinations of these variables (zero correlation). If one tries to apply PCA to a set of variables displaying low correlation, the analysis will most likely prove meaningless.</description>
     </item>
     

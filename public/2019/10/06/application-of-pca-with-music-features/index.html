@@ -71,16 +71,15 @@
 
 
 <p><strong>Some Context</strong></p>
-<p>Principal Components Analysis (PCA) is a tool going back decades used widely to identify patterns in data. Once patterns are discovered, one can compress the data by reducing the number of dimensions without much loss of information.</p>
+<p>Principal Components Analysis (PCA) is a tool that goes back decades used widely to identify patterns in data. Once patterns are discovered, one can compress the data by reducing the number of dimensions without much loss of information.</p>
 <p>The objective is to transform a set of interrelated variables into a set of unrelated linear combinations of these variables (zero correlation). If one tries to apply PCA to a set of variables displaying low correlation, the analysis will most likely prove meaningless.</p>
 <p>The mathematics behind PCA involves some linear algebra (primarily matrix algebra) and statistics.</p>
 <p>Let <strong>E</strong> be a matrix containing the eigenvectors for the covariance matrix (<span class="math inline">\(\hat\Sigma\)</span>) for our data. The eigenvectors in <strong>E</strong> are our principal components. As such, these are the requirements we need them to hold, the first a necessity and the second for convenience:</p>
 <ol style="list-style-type: decimal">
-<li><span class="math inline">\(e_i^Te_j = 0\)</span> when <span class="math inline">\(i \ne j\)</span> - the principal component axes are orthogonal to each other</li>
-<li><span class="math inline">\(e_j^Te_j = 1 \forall j\)</span></li>
+<li>The principal component axes are orthogonal to each other - <span class="math inline">\(e_i^Te_j = 0\)</span> when <span class="math inline">\(i \ne j\)</span></li>
+<li><span class="math inline">\(e_j^Te_j = 1\)</span> <span class="math inline">\(\forall j\)</span></li>
 </ol>
 <p>From the theory of matrices, for any positive semidefinite matrix there exists an orthogonal matrix <strong>E</strong> such that</p>
-<p>(<span class="math inline">\(\hat\Sigma\)</span>)<strong>E</strong> <span class="math inline">\(=\)</span> <strong>E</strong></p>
 
     </div>
   </article>
