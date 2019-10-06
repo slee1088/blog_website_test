@@ -24,6 +24,6 @@ Let **E** be a matrix containing the eigenvectors for the covariance matrix ($\h
 
 From the theory of matrices, for any positive semidefinite matrix there exists an orthogonal matrix **E** such that 
 
-\begin{center}
+\centering
 $\hat\Sigma$**E** $=$ **E**$\Lambda$ and $\hat\Sigma$ $=$ **E**$\Lambda E^T$
-\end{center}
+
