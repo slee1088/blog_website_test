@@ -1,2 +1,0 @@
-"0","pca <- principal(data[, 4:13], rotate = ""none"")"
-"0","plot(pca$values[1:10], type = ""b"", ylab = ""Eigenvalues"", xlab = ""Component"")"

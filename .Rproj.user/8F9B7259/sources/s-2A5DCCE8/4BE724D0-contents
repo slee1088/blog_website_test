@@ -1,5 +1,5 @@
 ---
-title: Application of PCA with music features
+title: Application of PCA with audio features
 author: Scott Lee
 date: '2019-10-06'
 slug: application-of-pca-with-music-features
@@ -13,14 +13,14 @@ tags:
 
 Principal Components Analysis (PCA) is a tool that goes back decades used widely to identify patterns in data. Once patterns are discovered, one can compress the data by reducing the number of dimensions without much loss of information. 
 
-The objective is to transform a set of interrelated variables into a set of unrelated linear combinations of these variables (zero correlation). If one tries to apply PCA to a set of variables displaying low correlation, the analysis will most likely prove meaningless. 
+The objective is to transform a set of interrelated variables into a set of unrelated linear combinations of these variables. If one tries to apply PCA to a set of variables displaying low correlation, the analysis will most likely prove meaningless. 
 
 **The mathematics behind PCA involves some linear algebra (primarily matrix algebra) and statistics.**
 
-Let $E$ be a matrix containing the eigenvectors for the covariance matrix $\hat\Sigma$ generated for our data. The eigenvectors in $E$ become our principal components (contains the loadings). As such, these are the requirements we need them to hold, the first a necessity and the second for convenience:
+Let $E$ be a matrix containing the eigenvectors for the covariance matrix $\hat\Sigma$ generated for our data. The eigenvectors in $E$ become our principal components (contains the loadings). These components, by virtue of them being eigenvectors hold the following properties:
 
 1. The principal component axes are orthogonal to each other - $e_i^Te_j = 0$ when $i \ne j$
-2. $e_j^Te_j = 1$ $\forall j$
+2. $e_j^Te_j = 1$ $\forall j$ (this is a condition imposed out of convenience - eigenvectors do not lose direction, therefore we can scale the length of the vectors as we wish)
 
 From the theory of matrices, for any positive semidefinite matrix there exists an orthogonal matrix $E$ such that: 
 
@@ -61,34 +61,37 @@ library(psych)
 ```{r,eval = TRUE}
 data <- read_csv("featuresdf.csv",locale = readr::locale(encoding = "windows-1252"))
 data_scaled <- as.data.frame(scale(data[, 4:13]))
-DataExplorer::plot_correlation(data_scaled)
+plot_correlation(data_scaled)
 ```
-* Based off the correlation matrix above, we don't see a high correlation between the variables besides energy and loudness which is pointing to components which won't explain a majority of the variance away. We can see this in the scree-plot below. Instead of one or two components that can explain the majority of the variance in the dataset, it looks like we need a majority of the components.
 
-* Apply the principal() function from the psych package.
+* Based off the correlation matrix above, we don't see a high correlation between the variables besides energy and loudness. This is looking bad for our PCA. Based off the above, we can suspect that we will need the majority of the components to explain the majority of the variance in the dataset. We can see this in the scree-plot below. Instead of one or two components that can explain the majority of the variance in the dataset, it looks like we need at least a half of the components.
+
+* Apply the principal() function from the *psych* package.
 
 
 ```{r,eval = TRUE}
 pca <- principal(data[, 4:13], rotate = "none")
 plot(pca$values[1:10], type = "b", ylab = "Eigenvalues", xlab = "Component")
-pca_5 <- psych::principal(data_scaled, nfactors = 5, rotate = "none")
+pca_5 <- principal(data_scaled, nfactors = 5, rotate = "none")
 pca_5
 ```
 
 * We can see that the first component has a high loading for energy and loudness which is what we were expecting given their high correlation. 
 
-* Before we investigate further, let us apply orthogonal rotation on our components using varimax. The purpose of rotating is to maximise the loadings on particular features on a specific component. This helps interpretation and also reduces correlation between the components. 
+* Before we investigate further, let us apply orthogonal rotation on our components using varimax. The purpose of rotating is to maximise the loadings on particular features on a specific component. This helps interpretation. 
 
 ```{r,eval = TRUE}
-pca_rotate <- psych::principal(data_scaled, nfactors = 5, rotate = "varimax")
+pca_rotate <- principal(data_scaled, nfactors = 5, rotate = "varimax")
 pca_rotate
 ```
 
 * Now, for the first component, we can more easily determine what features are being emphasised (energy, loudness, valence and speechiness). With business domain knowledge, one can now try to categorise and define each of the components, not in terms of just one variable but by grouping variables, for e.g. energy and loudness are quite similar and can be coined as ambience for instance.
 
-* To finish off, let's check out the correlation of our components. They should be uncorrelated except for themselves.
+* To finish off, let's check out the correlation of our components (for both the rotated and not rotated components). They should be uncorrelated except for themselves.
 
 ```{r,eval = TRUE}
 pca_scores <- data.frame(round(pca_rotate$scores, digits = 2))
-DataExplorer::plot_correlation(pca_scores)
+plot_correlation(pca_scores)
+pca_5_scores <- data.frame(round(pca_5$scores, digits = 2))
+plot_correlation(pca_5_scores)
 ```

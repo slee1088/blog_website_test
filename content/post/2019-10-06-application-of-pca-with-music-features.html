@@ -1,5 +1,5 @@
 ---
-title: Application of PCA with music features
+title: Application of PCA with audio features
 author: Scott Lee
 date: '2019-10-06'
 slug: application-of-pca-with-music-features
@@ -13,12 +13,12 @@ tags:
 
 <p><strong>Some Context</strong></p>
 <p>Principal Components Analysis (PCA) is a tool that goes back decades used widely to identify patterns in data. Once patterns are discovered, one can compress the data by reducing the number of dimensions without much loss of information.</p>
-<p>The objective is to transform a set of interrelated variables into a set of unrelated linear combinations of these variables (zero correlation). If one tries to apply PCA to a set of variables displaying low correlation, the analysis will most likely prove meaningless.</p>
+<p>The objective is to transform a set of interrelated variables into a set of unrelated linear combinations of these variables. If one tries to apply PCA to a set of variables displaying low correlation, the analysis will most likely prove meaningless.</p>
 <p><strong>The mathematics behind PCA involves some linear algebra (primarily matrix algebra) and statistics.</strong></p>
-<p>Let <span class="math inline">\(E\)</span> be a matrix containing the eigenvectors for the covariance matrix <span class="math inline">\(\hat\Sigma\)</span> generated for our data. The eigenvectors in <span class="math inline">\(E\)</span> become our principal components (contains the loadings). As such, these are the requirements we need them to hold, the first a necessity and the second for convenience:</p>
+<p>Let <span class="math inline">\(E\)</span> be a matrix containing the eigenvectors for the covariance matrix <span class="math inline">\(\hat\Sigma\)</span> generated for our data. The eigenvectors in <span class="math inline">\(E\)</span> become our principal components (contains the loadings). These components, by virtue of them being eigenvectors hold the following properties:</p>
 <ol style="list-style-type: decimal">
 <li>The principal component axes are orthogonal to each other - <span class="math inline">\(e_i^Te_j = 0\)</span> when <span class="math inline">\(i \ne j\)</span></li>
-<li><span class="math inline">\(e_j^Te_j = 1\)</span> <span class="math inline">\(\forall j\)</span></li>
+<li><span class="math inline">\(e_j^Te_j = 1\)</span> <span class="math inline">\(\forall j\)</span> (this is a condition imposed out of convenience - eigenvectors do not lose direction, therefore we can scale the length of the vectors as we wish)</li>
 </ol>
 <p>From the theory of matrices, for any positive semidefinite matrix there exists an orthogonal matrix <span class="math inline">\(E\)</span> such that:</p>
 <center>
@@ -66,18 +66,19 @@ tags:
 ##   time_signature = col_double()
 ## )
 data_scaled &lt;- as.data.frame(scale(data[, 4:13]))
-DataExplorer::plot_correlation(data_scaled)</code></pre>
-<p><img src="/post/2019-10-06-application-of-pca-with-music-features_files/figure-html/unnamed-chunk-1-1.png" width="672" /> * Based off the correlation matrix above, we don’t see a high correlation between the variables besides energy and loudness which is pointing to components which won’t explain a majority of the variance away. We can see this in the scree-plot below. Instead of one or two components that can explain the majority of the variance in the dataset, it looks like we need a majority of the components.</p>
+plot_correlation(data_scaled)</code></pre>
+<p><img src="/post/2019-10-06-application-of-pca-with-music-features_files/figure-html/unnamed-chunk-1-1.png" width="672" /></p>
 <ul>
-<li>Apply the principal() function from the psych package.</li>
+<li><p>Based off the correlation matrix above, we don’t see a high correlation between the variables besides energy and loudness. This is looking bad for our PCA. Based off the above, we can suspect that we will need the majority of the components to explain the majority of the variance in the dataset. We can see this in the scree-plot below. Instead of one or two components that can explain the majority of the variance in the dataset, it looks like we need at least a half of the components.</p></li>
+<li><p>Apply the principal() function from the <em>psych</em> package.</p></li>
 </ul>
 <pre class="r"><code>pca &lt;- principal(data[, 4:13], rotate = &quot;none&quot;)
 plot(pca$values[1:10], type = &quot;b&quot;, ylab = &quot;Eigenvalues&quot;, xlab = &quot;Component&quot;)</code></pre>
 <p><img src="/post/2019-10-06-application-of-pca-with-music-features_files/figure-html/unnamed-chunk-2-1.png" width="672" /></p>
-<pre class="r"><code>pca_5 &lt;- psych::principal(data_scaled, nfactors = 5, rotate = &quot;none&quot;)
+<pre class="r"><code>pca_5 &lt;- principal(data_scaled, nfactors = 5, rotate = &quot;none&quot;)
 pca_5
 ## Principal Components Analysis
-## Call: psych::principal(r = data_scaled, nfactors = 5, rotate = &quot;none&quot;)
+## Call: principal(r = data_scaled, nfactors = 5, rotate = &quot;none&quot;)
 ## Standardized loadings (pattern matrix) based upon correlation matrix
 ##                    PC1   PC2   PC3   PC4   PC5   h2   u2 com
 ## danceability      0.16  0.75  0.11  0.39  0.17 0.79 0.21 1.8
@@ -107,12 +108,12 @@ pca_5
 ## Fit based upon off diagonal values = 0.62</code></pre>
 <ul>
 <li><p>We can see that the first component has a high loading for energy and loudness which is what we were expecting given their high correlation.</p></li>
-<li><p>Before we investigate further, let us apply orthogonal rotation on our components using varimax. The purpose of rotating is to maximise the loadings on particular features on a specific component. This helps interpretation and also reduces correlation between the components.</p></li>
+<li><p>Before we investigate further, let us apply orthogonal rotation on our components using varimax. The purpose of rotating is to maximise the loadings on particular features on a specific component. This helps interpretation.</p></li>
 </ul>
-<pre class="r"><code>pca_rotate &lt;- psych::principal(data_scaled, nfactors = 5, rotate = &quot;varimax&quot;)
+<pre class="r"><code>pca_rotate &lt;- principal(data_scaled, nfactors = 5, rotate = &quot;varimax&quot;)
 pca_rotate
 ## Principal Components Analysis
-## Call: psych::principal(r = data_scaled, nfactors = 5, rotate = &quot;varimax&quot;)
+## Call: principal(r = data_scaled, nfactors = 5, rotate = &quot;varimax&quot;)
 ## Standardized loadings (pattern matrix) based upon correlation matrix
 ##                    RC1   RC2   RC4   RC3   RC5   h2   u2 com
 ## danceability     -0.13  0.88 -0.01  0.01 -0.04 0.79 0.21 1.1
@@ -142,8 +143,11 @@ pca_rotate
 ## Fit based upon off diagonal values = 0.62</code></pre>
 <ul>
 <li><p>Now, for the first component, we can more easily determine what features are being emphasised (energy, loudness, valence and speechiness). With business domain knowledge, one can now try to categorise and define each of the components, not in terms of just one variable but by grouping variables, for e.g. energy and loudness are quite similar and can be coined as ambience for instance.</p></li>
-<li><p>To finish off, let’s check out the correlation of our components. They should be uncorrelated except for themselves.</p></li>
+<li><p>To finish off, let’s check out the correlation of our components (for both the rotated and not rotated components). They should be uncorrelated except for themselves.</p></li>
 </ul>
 <pre class="r"><code>pca_scores &lt;- data.frame(round(pca_rotate$scores, digits = 2))
-DataExplorer::plot_correlation(pca_scores)</code></pre>
+plot_correlation(pca_scores)</code></pre>
 <p><img src="/post/2019-10-06-application-of-pca-with-music-features_files/figure-html/unnamed-chunk-4-1.png" width="672" /></p>
+<pre class="r"><code>pca_5_scores &lt;- data.frame(round(pca_5$scores, digits = 2))
+plot_correlation(pca_5_scores)</code></pre>
+<p><img src="/post/2019-10-06-application-of-pca-with-music-features_files/figure-html/unnamed-chunk-4-2.png" width="672" /></p>
