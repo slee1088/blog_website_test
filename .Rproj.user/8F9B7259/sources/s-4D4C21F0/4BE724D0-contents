@@ -1,0 +1,27 @@
+---
+title: Application of PCA with music features
+author: Scott Lee
+date: '2019-10-06'
+slug: application-of-pca-with-music-features
+categories:
+  - R
+tags:
+  - Principal Components Analysis
+---
+
+**Some Context**
+
+Principal Components Analysis (PCA) is a tool going back decades used widely to identify patterns in data. Once patterns are discovered, one can compress the data by reducing the number of dimensions without much loss of information. 
+
+The objective is to transform a set of interrelated variables into a set of unrelated linear combinations of these variables (zero correlation). If one tries to apply PCA to a set of variables displaying low correlation, the analysis will most likely prove meaningless. 
+
+The mathematics behind PCA involves some linear algebra (primarily matrix algebra) and statistics. 
+
+Let **E** be a matrix containing the eigenvectors for the covariance matrix ($\hat\Sigma$) for our data. The eigenvectors in **E** are our principal components. As such, these are the requirements we need them to hold, the first a necessity and the second for convenience:
+
+1. $e_i^Te_j = 0$ when $i \ne j$ - the principal component axes are orthogonal to each other
+2. $e_j^Te_j = 1 \forall j$
+
+From the theory of matrices, for any positive semidefinite matrix there exists an orthogonal matrix **E** such that 
+
+($\hat\Sigma$)**E** $=$ **E**

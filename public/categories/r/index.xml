@@ -6,10 +6,21 @@
     <description>Recent content in R on Scott&#39;s Random Data Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Sun, 22 Sep 2019 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Sun, 06 Oct 2019 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="/categories/r/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Application of PCA with music features</title>
+      <link>/2019/10/06/application-of-pca-with-music-features/</link>
+      <pubDate>Sun, 06 Oct 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/2019/10/06/application-of-pca-with-music-features/</guid>
+      <description>Some Context
+Principal Components Analysis (PCA) is a tool going back decades used widely to identify patterns in data. Once patterns are discovered, one can compress the data by reducing the number of dimensions without much loss of information.
+The objective is to transform a set of interrelated variables into a set of unrelated linear combinations of these variables (zero correlation). If one tries to apply PCA to a set of variables displaying low correlation, the analysis will most likely prove meaningless.</description>
+    </item>
     
     <item>
       <title>Text Generation with LSTM - Last words</title>

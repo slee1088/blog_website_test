@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Principal Component Analysis on Scott&#39;s Random Data Blog</title>
+    <link>/tags/principal-component-analysis/</link>
+    <description>Recent content in Principal Component Analysis on Scott&#39;s Random Data Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Sun, 06 Oct 2019 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="/tags/principal-component-analysis/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Application of PCA with music features</title>
+      <link>/2019/10/06/application-of-pca-with-music-features/</link>
+      <pubDate>Sun, 06 Oct 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/2019/10/06/application-of-pca-with-music-features/</guid>
+      <description></description>
+    </item>
+    
+  </channel>
+</rss>

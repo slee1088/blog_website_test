@@ -1,0 +1,22 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1570341436227.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "2811413110",
+    "id" : "4BE724D0",
+    "lastKnownWriteTime" : 1570344426,
+    "last_content_update" : 1570344426267,
+    "path" : "~/GitHub/blog_website/content/post/2019-10-06-application-of-pca-with-music-features.Rmd",
+    "project_path" : "content/post/2019-10-06-application-of-pca-with-music-features.Rmd",
+    "properties" : {
+        "cursorPosition" : "26,29",
+        "scrollLine" : "3"
+    },
+    "relative_order" : 9,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_markdown"
+}

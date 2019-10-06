@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="generator" content="Hugo 0.57.2" />
+
+
+<title>Application of PCA with music features - Scott&#39;s Random Data Blog</title>
+<meta property="og:title" content="Application of PCA with music features - Scott&#39;s Random Data Blog">
+
+
+  <link href='/home.png' rel='icon' type='image/x-icon'/>
+
+
+
+  
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/css/fonts.css" media="all">
+<link rel="stylesheet" href="/css/main.css" media="all">
+
+
+
+  </head>
+  <body>
+    <div class="wrapper">
+      <header class="header">
+        <nav class="nav">
+  <a href="/" class="nav-logo">
+    <img src="/images/home.png"
+         width="50"
+         height="50"
+         alt="Logo">
+  </a>
+
+  <ul class="nav-links">
+    
+    <li><a href="/about/">About</a></li>
+    
+    <li><a href="https://github.com/slee1088">GitHub</a></li>
+    
+    <li><a href="/reference/">References</a></li>
+    
+  </ul>
+</nav>
+
+      </header>
+
+
+<main class="content" role="main">
+
+  <article class="article">
+    
+    <span class="article-duration">1 min read</span>
+    
+
+    <h1 class="article-title">Application of PCA with music features</h1>
+
+    
+    <span class="article-date">2019-10-06</span>
+    
+
+    <div class="article-content">
+      
+
+
+<p><strong>Some Context</strong></p>
+<p>Principal Components Analysis (PCA) is a tool going back decades used widely to identify patterns in data. Once patterns are discovered, one can compress the data by reducing the number of dimensions without much loss of information.</p>
+<p>The objective is to transform a set of interrelated variables into a set of unrelated linear combinations of these variables (zero correlation). If one tries to apply PCA to a set of variables displaying low correlation, the analysis will most likely prove meaningless.</p>
+<p>The mathematics behind PCA involves some linear algebra (primarily matrix algebra) and statistics.</p>
+<p>Let <strong>E</strong> be a matrix containing the eigenvectors for the covariance matrix (<span class="math inline">\(\hat\Sigma\)</span>) for our data. The eigenvectors in <strong>E</strong> are our principal components. As such, these are the requirements we need them to hold, the first a necessity and the second for convenience:</p>
+<ol style="list-style-type: decimal">
+<li><span class="math inline">\(e_i^Te_j = 0\)</span> when <span class="math inline">\(i \ne j\)</span> - the principal component axes are orthogonal to each other</li>
+<li><span class="math inline">\(e_j^Te_j = 1 \forall j\)</span></li>
+</ol>
+<p>From the theory of matrices, for any positive semidefinite matrix there exists an orthogonal matrix <strong>E</strong> such that</p>
+<p>(<span class="math inline">\(\hat\Sigma\)</span>)<strong>E</strong> <span class="math inline">\(=\)</span> <strong>E</strong></p>
+
+    </div>
+  </article>
+
+  
+
+
+</main>
+
+      <footer class="footer">
+        <ul class="footer-links">
+          <li>
+            <a href="/index.xml" type="application/rss+xml" target="_blank">RSS feed</a>
+          </li>
+          <li>
+            <a href="https://gohugo.io/" class="footer-links-kudos">Made with <img src="/images/hugo-logo.png" alt="Img link to Hugo website" width="22" height="22"></a>
+          </li>
+        </ul>
+      </footer>
+
+    </div>
+    
+
+    
+<script src="/js/math-code.js"></script>
+<script async src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+
+
+    
+  </body>
+</html>
+
