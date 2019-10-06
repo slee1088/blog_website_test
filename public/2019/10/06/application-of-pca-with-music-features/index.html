@@ -22,6 +22,11 @@
 
 
 
+
+<link href='//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css' rel='stylesheet' type='text/css' />
+
+
+
 <link rel="stylesheet" href="/css/fonts.css" media="all">
 <link rel="stylesheet" href="/css/main.css" media="all">
 
@@ -57,7 +62,7 @@
 
   <article class="article">
     
-    <span class="article-duration">2 min read</span>
+    <span class="article-duration">6 min read</span>
     
 
     <h1 class="article-title">Application of PCA with music features</h1>
@@ -98,8 +103,114 @@
 </center>
 <p>Recall <span class="math inline">\(\Lambda\)</span> is a <strong>diagonal</strong> matrix containing the eigenvalues of <span class="math inline">\(\hat\Sigma\)</span>.</p>
 <p>Using the eigenvalues, we can now determine which eigenvectors (components) we want to use or more importantly which ones to remove. A judgement call needs to be made with the help of the latent roots criterion and the scree test. You will inevitably lose some information by culling components but if the eigenvalues are small, you won’t lose much.</p>
-<p>For a thorough commentary, please refer to the following <a href="http://www.cs.otago.ac.nz/cosc453/student_tutorials/principal_components.pdf">link</a></p>
+<p>For a thorough commentary, please refer to the following <a href="http://www.cs.otago.ac.nz/cosc453/student_tutorials/principal_components.pdf">link</a>.</p>
 <p><strong>Workflow</strong></p>
+<ul>
+<li><p>The dataset I’ve used is Spotify data available on <a href="https://www.kaggle.com/jsongunsw/spotify-datasets/data">Kaggle</a> which contains audio features for the top 100 spotify tracks at a certain period in time. The data seems fairly clean with all records containing values.</p></li>
+<li><p>Read in the data and plot the correlation of the audio features.</p></li>
+</ul>
+<pre class="r"><code>data &lt;- read_csv(&quot;featuresdf.csv&quot;,locale = readr::locale(encoding = &quot;windows-1252&quot;))
+## Parsed with column specification:
+## cols(
+##   id = col_character(),
+##   name = col_character(),
+##   artists = col_character(),
+##   danceability = col_double(),
+##   energy = col_double(),
+##   key = col_double(),
+##   loudness = col_double(),
+##   mode = col_double(),
+##   speechiness = col_double(),
+##   acousticness = col_double(),
+##   instrumentalness = col_double(),
+##   liveness = col_double(),
+##   valence = col_double(),
+##   tempo = col_double(),
+##   duration_ms = col_double(),
+##   time_signature = col_double()
+## )
+data_scaled &lt;- as.data.frame(scale(data[, 4:13]))
+DataExplorer::plot_correlation(data_scaled)</code></pre>
+<p><img src="/post/2019-10-06-application-of-pca-with-music-features_files/figure-html/unnamed-chunk-1-1.png" width="672" /> * Based off the correlation matrix above, we don’t see a high correlation between the variables besides energy and loudness which is pointing to components which won’t explain a majority of the variance away. We can see this in the scree-plot below. Instead of one or two components that can explain the majority of the variance in the dataset, it looks like we need a majority of the components.</p>
+<ul>
+<li>Apply the principal() function from the psych package.</li>
+</ul>
+<pre class="r"><code>pca &lt;- principal(data[, 4:13], rotate = &quot;none&quot;)
+plot(pca$values[1:10], type = &quot;b&quot;, ylab = &quot;Eigenvalues&quot;, xlab = &quot;Component&quot;)</code></pre>
+<p><img src="/post/2019-10-06-application-of-pca-with-music-features_files/figure-html/unnamed-chunk-2-1.png" width="672" /></p>
+<pre class="r"><code>pca_5 &lt;- psych::principal(data_scaled, nfactors = 5, rotate = &quot;none&quot;)
+pca_5
+## Principal Components Analysis
+## Call: psych::principal(r = data_scaled, nfactors = 5, rotate = &quot;none&quot;)
+## Standardized loadings (pattern matrix) based upon correlation matrix
+##                    PC1   PC2   PC3   PC4   PC5   h2   u2 com
+## danceability      0.16  0.75  0.11  0.39  0.17 0.79 0.21 1.8
+## energy            0.83 -0.24  0.09  0.06  0.07 0.76 0.24 1.2
+## key              -0.04 -0.06  0.64 -0.42  0.14 0.60 0.40 1.9
+## loudness          0.91 -0.05 -0.05 -0.11 -0.06 0.84 0.16 1.1
+## mode             -0.15 -0.03 -0.64  0.21 -0.29 0.56 0.44 1.8
+## speechiness      -0.50  0.17  0.40  0.47  0.05 0.66 0.34 3.2
+## acousticness     -0.22  0.49 -0.28 -0.55 -0.17 0.70 0.30 3.1
+## instrumentalness  0.03 -0.25 -0.36  0.19  0.74 0.78 0.22 1.9
+## liveness          0.17 -0.29  0.19  0.40 -0.54 0.60 0.40 3.0
+## valence           0.59  0.63 -0.01  0.08 -0.02 0.75 0.25 2.0
+## 
+##                        PC1  PC2  PC3  PC4  PC5
+## SS loadings           2.23 1.45 1.23 1.12 1.02
+## Proportion Var        0.22 0.14 0.12 0.11 0.10
+## Cumulative Var        0.22 0.37 0.49 0.60 0.71
+## Proportion Explained  0.32 0.21 0.17 0.16 0.14
+## Cumulative Proportion 0.32 0.52 0.70 0.86 1.00
+## 
+## Mean item complexity =  2.1
+## Test of the hypothesis that 5 components are sufficient.
+## 
+## The root mean square of the residuals (RMSR) is  0.11 
+##  with the empirical chi square  111.85  with prob &lt;  1.7e-22 
+## 
+## Fit based upon off diagonal values = 0.62</code></pre>
+<ul>
+<li><p>We can see that the first component has a high loading for energy and loudness which is what we were expecting given their high correlation.</p></li>
+<li><p>Before we investigate further, let us apply orthogonal rotation on our components using varimax. The purpose of rotating is to maximise the loadings on particular features on a specific component. This helps interpretation and also reduces correlation between the components.</p></li>
+</ul>
+<pre class="r"><code>pca_rotate &lt;- psych::principal(data_scaled, nfactors = 5, rotate = &quot;varimax&quot;)
+pca_rotate
+## Principal Components Analysis
+## Call: psych::principal(r = data_scaled, nfactors = 5, rotate = &quot;varimax&quot;)
+## Standardized loadings (pattern matrix) based upon correlation matrix
+##                    RC1   RC2   RC4   RC3   RC5   h2   u2 com
+## danceability     -0.13  0.88 -0.01  0.01 -0.04 0.79 0.21 1.1
+## energy            0.76  0.11  0.38 -0.13 -0.06 0.76 0.24 1.6
+## key              -0.03 -0.13 -0.07 -0.75  0.11 0.60 0.40 1.1
+## loudness          0.89  0.19  0.13 -0.04  0.06 0.84 0.16 1.1
+## mode             -0.06 -0.11 -0.08  0.73  0.03 0.56 0.44 1.1
+## speechiness      -0.71  0.23  0.30 -0.12  0.06 0.66 0.34 1.7
+## acousticness     -0.06  0.06 -0.81  0.08  0.19 0.70 0.30 1.2
+## instrumentalness  0.04 -0.05  0.13  0.13 -0.86 0.78 0.22 1.1
+## liveness          0.08 -0.08  0.57  0.18  0.49 0.60 0.40 2.3
+## valence           0.41  0.74 -0.12  0.01  0.11 0.75 0.25 1.7
+## 
+##                        RC1  RC2  RC4  RC3  RC5
+## SS loadings           2.07 1.46 1.27 1.19 1.05
+## Proportion Var        0.21 0.15 0.13 0.12 0.11
+## Cumulative Var        0.21 0.35 0.48 0.60 0.71
+## Proportion Explained  0.29 0.21 0.18 0.17 0.15
+## Cumulative Proportion 0.29 0.50 0.68 0.85 1.00
+## 
+## Mean item complexity =  1.4
+## Test of the hypothesis that 5 components are sufficient.
+## 
+## The root mean square of the residuals (RMSR) is  0.11 
+##  with the empirical chi square  111.85  with prob &lt;  1.7e-22 
+## 
+## Fit based upon off diagonal values = 0.62</code></pre>
+<ul>
+<li><p>Now, for the first component, we can more easily determine what features are being emphasised (energy, loudness, valence and speechiness). With business domain knowledge, one can now try to categorise and define each of the components, not in terms of just one variable but by grouping variables, for e.g. energy and loudness are quite similar and can be coined as ambience for instance.</p></li>
+<li><p>To finish off, let’s check out the correlation of our components. They should be uncorrelated except for themselves.</p></li>
+</ul>
+<pre class="r"><code>pca_scores &lt;- data.frame(round(pca_rotate$scores, digits = 2))
+DataExplorer::plot_correlation(pca_scores)</code></pre>
+<p><img src="/post/2019-10-06-application-of-pca-with-music-features_files/figure-html/unnamed-chunk-4-1.png" width="672" /></p>
 
     </div>
   </article>
@@ -122,6 +233,18 @@
 
     </div>
     
+
+
+
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+
+
+
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/languages/r.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/languages/yaml.min.js"></script>
+<script>hljs.configure({languages: []}); hljs.initHighlightingOnLoad();</script>
+
+
 
     
 <script src="/js/math-code.js"></script>

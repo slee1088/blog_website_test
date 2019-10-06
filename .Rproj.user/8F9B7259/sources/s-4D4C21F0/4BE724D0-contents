@@ -46,3 +46,49 @@ For a thorough commentary, please refer to the following [link](http://www.cs.ot
 
 **Workflow**
 
+* The dataset I've used is Spotify data available on [Kaggle](https://www.kaggle.com/jsongunsw/spotify-datasets/data) which contains audio features for the top 100 spotify tracks at a certain period in time. The data seems fairly clean with all records containing values.
+
+```{r setup, include=FALSE,eval = TRUE}
+knitr::opts_chunk$set(collapse = TRUE)
+library(readr)
+library(DataExplorer)
+library(psych)
+
+```
+
+* Read in the data and plot the correlation of the audio features.
+
+```{r,eval = TRUE}
+data <- read_csv("featuresdf.csv",locale = readr::locale(encoding = "windows-1252"))
+data_scaled <- as.data.frame(scale(data[, 4:13]))
+DataExplorer::plot_correlation(data_scaled)
+```
+* Based off the correlation matrix above, we don't see a high correlation between the variables besides energy and loudness which is pointing to components which won't explain a majority of the variance away. We can see this in the scree-plot below. Instead of one or two components that can explain the majority of the variance in the dataset, it looks like we need a majority of the components.
+
+* Apply the principal() function from the psych package.
+
+
+```{r,eval = TRUE}
+pca <- principal(data[, 4:13], rotate = "none")
+plot(pca$values[1:10], type = "b", ylab = "Eigenvalues", xlab = "Component")
+pca_5 <- psych::principal(data_scaled, nfactors = 5, rotate = "none")
+pca_5
+```
+
+* We can see that the first component has a high loading for energy and loudness which is what we were expecting given their high correlation. 
+
+* Before we investigate further, let us apply orthogonal rotation on our components using varimax. The purpose of rotating is to maximise the loadings on particular features on a specific component. This helps interpretation and also reduces correlation between the components. 
+
+```{r,eval = TRUE}
+pca_rotate <- psych::principal(data_scaled, nfactors = 5, rotate = "varimax")
+pca_rotate
+```
+
+* Now, for the first component, we can more easily determine what features are being emphasised (energy, loudness, valence and speechiness). With business domain knowledge, one can now try to categorise and define each of the components, not in terms of just one variable but by grouping variables, for e.g. energy and loudness are quite similar and can be coined as ambience for instance.
+
+* To finish off, let's check out the correlation of our components. They should be uncorrelated except for themselves.
+
+```{r,eval = TRUE}
+pca_scores <- data.frame(round(pca_rotate$scores, digits = 2))
+DataExplorer::plot_correlation(pca_scores)
+```
